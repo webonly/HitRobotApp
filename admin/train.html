@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+  <link rel="stylesheet" href="../css/hrg.css">
+  <link rel="stylesheet" href="../css/iconfont.css">
+  <script type="text/javascript" src="../js/common/jquery.min.js"></script> 
+
+
+ <style>
+body{font-family:"Redocn","youyuan";}
+#train-list {display:block;width:900px;height:1400px;margin-top:10px;position:relative;overflow:auto;}
+ </style>
+
+</head>
+<body>
+	<div style="width: 900px;height: 60px;text-align: center;font-size: 50px;font-family: youyuan;color:#ffffff;text-shadow: 1px 1px 5px #f4f4f4;">火车查询</div>
+  <div class="train-search" style="color:#ffffff;font-size: 20px;">
+  <div class="train-search-div">出发城市:</div><div class="train-search-div"><input id="startCity" type="text" value=""></div><div class="train-search-div">到达城市:</div><div class="train-search-div"><input id="endCity" type="text" value=""></div><div class="train-search-div"><button id="submitTrain" style="width: 175px;height: 42px;background-color: #ffffff;margin-left: 15px;border-radius: 5px;font-size: 20px;font-family: youyuan"> 查询</button></div>
+  </div>
+  <div style="clear: both;width: 900px;margin-top: 130px;">
+    <ul class="train-result">
+      <li style="border-bottom: 2px solid #ffffff;"><span style="font-size: 20px;">车次</span><span style="font-size: 20px;">类型</span><span style="font-size: 20px;">出发站</span><span style="font-size: 20px;">到达站</span><span style="font-size: 20px;">出发时间</span><span>到达时间</span><span>历时</span></li>
+    </ul>
+    <ul class="train-result" id="train-list">
+      
+    </ul>
+  </div>
+  <a class="startCity-voice1"><img id="city-icon1" src="../image/talk1.png" width="70" height="70"></a>
+  <a class="startCity-voice2"><img id="city-icon2" src="../image/talk1.png" width="70" height="70"></a>
+
+  <script src="js/voice-train.js"></script>
+</body>
+</html>
+<script>
+$(function(){
+$(".startCity-voice1").on("touchstart",function(){
+  $("#city-icon1").attr("src","../image/talk2.png");
+  voiceCity1=false;
+  voiceCity2=false;
+   cmdISRstart();
+});
+$(".startCity-voice2").on("touchstart",function(){
+  $("#city-icon2").attr("src","../image/talk2.png");
+  voiceCity1=false;
+  voiceCity2=false;
+  cmdISRstart();
+});
+
+$(".startCity-voice1").on("touchend",function(){
+  $("#city-icon1").attr("src","../image/talk1.png");
+  voiceCity1=true;
+  cmdISRend();
+});
+
+$(".startCity-voice2").on("touchend",function(){
+  $("#city-icon2").attr("src","../image/talk1.png");
+  voiceCity2=true;
+  cmdISRend();
+});
+
+  $("#submitTrain").click(function(){
+    console.log("7777");
+     if ($("#startCity").val()!=""&&$("#endCity").val()!="") {
+       
+       $.ajax({
+        url:"http://127.0.0.1/Access.asmx/GetTrainInfo?startCity="+$("#startCity").val()+"&endCity="+$("#endCity").val(),
+        dataType: "json",
+        async: true,
+        success: function(data) {
+          console.log(data);
+          console.log(data.error_code);
+        if (data.error_code==0) {
+         var tranlist="";
+        for(var i=0;i<data.result.list.length;i++){
+           tranlist+="<li><span>"+data.result.list[i].train_no+"</span><span >"+data.result.list[i].train_type+"</span><span>"+data.result.list[i].start_station+"</span><span>"+data.result.list[i].end_station+"</span><span>"+data.result.list[i].start_time+"</span><span>"+data.result.list[i].end_time+"</span><span>"+data.result.list[i].run_time+"</span></li>"
+        }
+       $("#train-list").html(tranlist);
+        }else{
+          $("#train-list").html("<li style='border:none;'><div style='idth:100%;text-align:center;color:#fff;font-size:20px;line-height:50px;'>查询不到火车始发站相关信息！</div></li>");
+        }
+
+        },
+        error: function(request, error) {
+        console.log("8888");
+        }
+    });
+
+     }else if($("#startCity").val()=="") {
+      $("#train-list").html("<li style='border:none;'><div style='width:100%;text-align:center;color:#fff;font-size:20px;line-height:50px;'>出发城市不能为空！</div></li>");
+      console.log("111");
+     }else if($("#endCity").val()=="") {
+      $("#train-list").html("<li style='border:none;'><div style='idth:100%;text-align:center;color:#fff;font-size:20px;line-height:50px;'>到达城市不能为空！</div></li>");
+     }
+
+  });
+
+ //禁用右键
+function stop() {
+  return false;
+}
+document.oncontextmenu = stop;
+
+});
+</script>

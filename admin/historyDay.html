@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible"content="IE=edge">
+  <title></title>
+    <link rel="stylesheet"href="../css/materialize.min.css">
+    <link rel="stylesheet"href="../css/hrg.css">
+  <script type="text/javascript"src="../js/common/jquery.min.js"></script>
+  <script type="text/javascript"src="../js/common/materialize.min.js"></script>
+ <style>
+body{font-family:"Redocn","youyuan"}#train-list{display:block;width:900px;height:1400px;margin-top:10px;position:relative;overflow:auto}</style>
+</head>
+<body>
+  <div style="width: 900px;height: 60px;text-align: center;font-size: 50px;font-family: youyuan;color:#ffffff;text-shadow: 1px 1px 5px #f4f4f4;">历史上的今天</div>
+  <div style="clear: both;width: 900px;margin-top: 30px;height:1600px;position:relative;overflow:auto;">
+    <div class="row"id="historyCont">
+   </div>
+</div>
+</body>
+</html>
+<script>
+$(function(){$.ajax({url:"http://127.0.0.1/Access.asmx/GetHistoryOnToday",dataType:"json",async:true,success:function(data){if (data.error_code==0){var historylist="";for(var i=0;i<data.result.length;i++){historylist+="<div class='col s12 m6'><div class='card blue-grey darken-1'><div class='card-content white-text'><span class='card-title'>"+data.result[i].date+"</span><p>"+data.result[i].title+"</p></div></div></div>"}$("#historyCont").html(historylist)}else{}},error:function(request,error){}})});</script>
