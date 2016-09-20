@@ -1,7 +1,6 @@
 ﻿function btnAudio() {
   document.getElementById("audio-btn2").play()
 }
-
 function init() {
   var a = new ROS2D.Viewer({
     divID: "nav",
@@ -38,7 +37,7 @@ function open_createMapMode() {
 }
 
 function close_createMapMode() {
-  string.data = "navigation", cmd_string.publish(string)
+  string.data = "gmapping_pose", cmd_string.publish(string), string.data = "navigation", cmd_string.publish(string)
 }
 
 function change_action() {
@@ -46,7 +45,7 @@ function change_action() {
 }
 
 function save_map() {
-  string.data = "gmapping_pose", cmd_string.publish(string), string.data = "save_map", cmd_string.publish(string), string.data = "save_map_edit", cmd_string.publish(string)
+  string.data = "save_map", cmd_string.publish(string), string.data = "save_map_edit", cmd_string.publish(string)
 }
 
 function Stop_motion() {
@@ -60,12 +59,13 @@ function Open_handle() {
 function Close_handle() {
   navigator_cmd.data = "rosnode kill /teleop_joystick", shell_string.publish(navigator_cmd)
 }
-var isMapState = "navigation",
-  poseDataSet = [];
+var isMapState = "navigation";
+var   poseDataSet = [];
 document.getElementById("audio-btn2").volume = .2;
-var ros = new ROSLIB.Ros({
-    url: "ws://192.168.0.7:9090"
-  }),
+
+var URL="ws://192.168.0.7:9090";
+var ros = new ROSLIB.Ros();
+ros.connect(URL);
   string_Map = new ROSLIB.Message({
     data: "navigation"
   }),
@@ -141,8 +141,9 @@ var ros = new ROSLIB.Ros({
 //连接状态
 $(".navigator-main-l").css("backgroundImage","url()");
 ros.on("close",function(){
-    $(".navigator-main-l").css("backgroundImage","url(map/map.png)");
-  });
+    $(".navigator-main-l").css("backgroundImage","url()");
+    ros.connect(URL);
+});
 ros.on("connection",function(){
        Close_handle();
     $(".navigator-main-l").css("backgroundImage","url(map/map.png)");
@@ -189,7 +190,7 @@ function Manual_motion(poseData) {
                    isMoveGoal=0;
                    isOnSpeak=true;
                    cmdTTSspeak("您好，请您让一让！");
-                   isSpeak==1;
+                   isSpeak=1;
                 }
                 if (status.status==3 && isMoveGoal==1) {
                    isMoveGoal=0;
@@ -261,8 +262,7 @@ $("#isSavaMap").click(function(){
 
 function mapController(poseId){
    btnAudio();
-   goalResut=0;
-   isSpeak==0;
+   goalResut=0;6
    Manual_motion(poseDataSet[poseId]);
 }
 
@@ -310,4 +310,7 @@ $("#shoubing").change(function(event) {
      Open_handle();
    }
 });
-
+window.onunload=function(){
+      Close_handle();
+      Stop_motion();
+}
