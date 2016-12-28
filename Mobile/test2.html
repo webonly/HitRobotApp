@@ -1,0 +1,513 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" href="jquery/jquery.mobile-1.3.2.min.css">
+    <script src="jquery/jquery-1.8.3.min.js"></script>
+    <script src="jquery/jquery.mobile-1.3.2.min.js"></script>
+
+    <script type="text/javascript" src="navigation/easeljs.min.js"></script>
+    <script type="text/javascript" src="navigation/eventemitter2.min.js"></script>
+    <script type="text/javascript" src="navigation/ros2d.js"></script>
+    <script type="text/javascript" src="navigation/nav2d.js"></script>
+    <script type="text/javascript" src="navigation/roslib.min.js"></script>
+    <script type="text/javascript" src="navigation/three.min.js"></script>
+
+    <script>
+        var ros = new ROSLIB.Ros();
+
+        var websocket = 'ws://192.168.0.7:9090';
+
+        var connecting = false;
+
+        ros.connect(websocket);
+
+        var VelTopic = new ROSLIB.Topic({
+            ros: ros,
+            name: '/cmd_vel',
+            messageType: 'geometry_msgs/Twist'
+        });
+
+        var twist = new ROSLIB.Message({
+            linear: {
+                x: 0,
+                y: 0,
+                z: 0
+            },
+            angular: {
+                x: 0,
+                y: 0,
+                z: 0
+            },
+        });
+
+        var alpha, gamma, beta;
+        var x, y, z, r;
+        var lock = false;
+
+        var IMU_Timer = null;
+        var imuTopic = new ROSLIB.Topic({
+            ros: ros,
+            name: '/mobile_imu',
+            messageType: 'sensor_msgs/Imu'
+        });
+
+
+        var imuMessage = new ROSLIB.Message({
+            header: {
+                frame_id: "world"
+            },
+            orientation: {
+                x: 0,
+                y: 0,
+                z: 0,
+                w: 0
+            },
+            orientation_covariance: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+
+            angular_velocity: {
+                x: 0,
+                y: 0,
+                z: 0
+            },
+
+            angular_velocity_covariance: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            linear_acceleration: {
+                x: 0,
+                y: 0,
+                z: 0
+            },
+            linear_acceleration_covariance: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        });
+
+
+
+        var imgTopic = new ROSLIB.Topic({
+            ros: ros,
+            name: '/h5_image',
+            messageType: '/std_msgs/String'
+        });
+
+
+        var poseTopic = new ROSLIB.Topic({
+            ros: ros,
+            name: '/robot_pose',
+            messageType: 'geometry_msgs/Pose',
+            throttle_rate: 100
+        });
+
+
+        ros.on('connection', function () {
+            connecting = true;
+            $("#status").html("连接成功！");
+        });
+
+        ros.on('close', function () {
+            connecting = false;
+            $("#status").html("连接失败！");
+        });
+
+        window.onload = function () {
+
+
+
+            $("[href=#handle]").click(openHandle);
+            $("#handle-back").click(closeHandle);
+
+            $("[href=#IMU]").click(openIMU);
+            $("#IMU-back").click(closeIMU);
+
+            $("[href=#vocie]").click(openVoice);
+            $("#vocie-back").click(closeVoice);
+
+
+            //$("[href=#setting]").click(showMap);
+            $("[href=#testPage]").click(subscribePostion);
+            $("#testPage-back").click(unsubscribePostion);
+
+        }
+
+        function DeviceOrientationCallback(event) {
+            alpha = event.alpha;
+            beta = event.beta;
+            gamma = event.gamma;
+
+            if (alpha != null || beta != null || gamma != null)
+                var html1 = 'alpha: ' + alpha + '<br/>beta: ' + beta + '<br />gamma: ' + gamma;
+            $("#dataContainerMotion").html(html1);
+            $("#P1").html(html1);
+        }
+
+        function DeviceMotionCallback(event) {
+            x = event.accelerationIncludingGravity.x;
+            y = event.accelerationIncludingGravity.y;
+            z = event.accelerationIncludingGravity.z;
+            r = event.rotationRate;
+
+        }
+        function openIMU() {
+            alert("openIMU");
+            if (window.DeviceOrientationEvent) {
+                window.addEventListener(
+                               "deviceorientation", DeviceOrientationCallback);
+            }
+            else {
+                alert("deviceorientation no support");
+            }
+            if (window.DeviceMotionEvent) {
+                window.addEventListener(
+                      "devicemotion", DeviceMotionCallback);
+            }
+            else {
+                alert("devicemotion no support");
+            }
+
+            if (IMU_Timer == null) {
+                IMU_Timer = setInterval(imuSnapShot, 100);
+            }
+
+
+            document.getElementById("IMU").addEventListener("touchstart", HandletouchCallback, false);
+            document.getElementById("IMU").addEventListener("touchend", HandletouchCallback, false);
+        }
+
+        function closeIMU() {
+            alert("closeIMU");
+            if (window.DeviceOrientationEvent) {
+                window.removeEventListener(
+                               "deviceorientation", DeviceOrientationCallback);
+            }
+            if (window.DeviceMotionEvent) {
+                window.removeEventListener(
+                      "devicemotion", DeviceMotionCallback);
+            }
+
+            if (IMU_Timer != null) {
+                clearInterval(IMU_Timer);
+                IMU_Timer = null;
+            }
+        }
+
+
+        function imuSnapShot() {
+            if (lock) {
+                var beta_radian = ((beta + 360) / 360 * 2 * Math.PI) % (2 * Math.PI);
+                var gamma_radian = ((gamma + 360) / 360 * 2 * Math.PI) % (2 * Math.PI);
+                var alpha_radian = ((alpha + 360) / 360 * 2 * Math.PI) % (2 * Math.PI);
+                var eurlerpose = new THREE.Euler(beta_radian, gamma_radian, alpha_radian);
+                var quaternionpose = new THREE.Quaternion;
+                quaternionpose.setFromEuler(eurlerpose);
+
+
+                imuMessage.orientation.x = quaternionpose.x;
+                imuMessage.orientation.y = quaternionpose.y;
+                imuMessage.orientation.z = quaternionpose.z;
+                imuMessage.orientation.w = quaternionpose.w;
+
+                imuMessage.angular_velocity.x = r.beta;
+                imuMessage.angular_velocity.y = r.gamma;
+                imuMessage.angular_velocity.z = r.alpha;
+
+                imuMessage.linear_acceleration.x = x;
+                imuMessage.linear_acceleration.y = y;
+                imuMessage.linear_acceleration.z = z;
+            }
+
+            else {
+                imuMessage.orientation.x = -1;
+                imuMessage.orientation.y = -1;
+                imuMessage.orientation.z = -1;
+                imuMessage.orientation.w = -1;
+
+                imuMessage.angular_velocity.x = -1;
+                imuMessage.angular_velocity.y = -1;
+                imuMessage.angular_velocity.z = -1;
+
+                imuMessage.linear_acceleration.x = -1;
+                imuMessage.linear_acceleration.y = -1;
+                imuMessage.linear_acceleration.z = -1;
+
+            }
+            imuTopic.publish(imuMessage);
+        }
+
+        function openVoice() {
+            document.getElementById("talk").addEventListener("touchstart", touch, false);
+            document.getElementById("talk").addEventListener("touchend", touch, false);
+        }
+        function closeVoice() {
+            document.getElementById("talk").removeEventListener("touchstart", touch, false);
+            document.getElementById("talk").removeEventListener("touchend", touch, false);
+        }
+        function touch(event) {
+            switch (event.type) {
+                case "touchstart":
+                    console.log("touchstart");
+                    $("#talk").attr("src", "image/talk2.png");
+                    $("#vocie-gif").css("display", "block");
+                    event.preventDefault();
+                    break;
+                case "touchend":
+                    console.log("touchend");
+                    $("#talk").attr("src", "image/talk1.png");
+                    $("#vocie-gif").css("display", "none");
+                    break;
+                default:
+                    break;
+            }
+        }
+
+
+
+
+
+
+        function RobotGo(direction) {
+            if (!connecting)
+                return;
+
+            switch (direction) {
+                case "front":
+                    twist.linear.x = 0.5;
+                    twist.angular.z = 0;
+                    break;
+                case "back":
+                    twist.linear.x = -0.5;
+                    twist.angular.z = 0;
+                    break;
+                case "left":
+                    twist.linear.x = 0;
+                    twist.angular.z = -0.5;
+                    break;
+                case "right":
+                    twist.linear.x = 0;
+                    twist.angular.z = 0.5;
+                    break;
+                case "stop":
+                    twist.linear.x = 0;
+                    twist.angular.z = 0;
+                    break;
+                default:
+                    break;
+
+            }
+            VelTopic.publish(twist);
+        }
+
+        function openHandle() {
+            alert("openHandle");
+            document.getElementById("up").addEventListener("touchstart", HandletouchCallback, false);
+            document.getElementById("up").addEventListener("touchend", HandletouchCallback, false);
+
+            document.getElementById("down").addEventListener("touchstart", HandletouchCallback, false);
+            document.getElementById("down").addEventListener("touchend", HandletouchCallback, false);
+
+            document.getElementById("stop").addEventListener("touchstart", HandletouchCallback, false);
+            document.getElementById("stop").addEventListener("touchend", HandletouchCallback, false);
+
+            document.getElementById("left").addEventListener("touchstart", HandletouchCallback, false);
+            document.getElementById("left").addEventListener("touchend", HandletouchCallback, false);
+
+            document.getElementById("right").addEventListener("touchstart", HandletouchCallback, false);
+            document.getElementById("right").addEventListener("touchend", HandletouchCallback, false);
+
+        }
+        function closeHandle() {
+            alert("closeHandle");
+            document.getElementById("up").removeEventListener("touchstart", HandletouchCallback, false);
+            document.getElementById("up").removeEventListener("touchend", HandletouchCallback, false);
+
+            document.getElementById("down").removeEventListener("touchstart", HandletouchCallback, false);
+            document.getElementById("down").removeEventListener("touchend", HandletouchCallback, false);
+
+            document.getElementById("stop").removeEventListener("touchstart", HandletouchCallback, false);
+            document.getElementById("stop").removeEventListener("touchend", HandletouchCallback, false);
+
+            document.getElementById("left").removeEventListener("touchstart", HandletouchCallback, false);
+            document.getElementById("left").removeEventListener("touchend", HandletouchCallback, false);
+
+            document.getElementById("right").removeEventListener("touchstart", HandletouchCallback, false);
+            document.getElementById("right").removeEventListener("touchend", HandletouchCallback, false);
+        }
+
+        function HandletouchCallback(event) {
+            switch (event.type) {
+                case "touchstart":
+                    event.preventDefault();
+                    switch (event.target.id) {
+                        case "left":
+                            $("#left").attr("src", "image/left1.png");
+                            RobotGo("left");
+                            break;
+                        case "right":
+                            $("#right").attr("src", "image/right1.png");
+                            RobotGo("right");
+                            break;
+                        case "down":
+                            $("#down").attr("src", "image/down1.png");
+                            RobotGo("back");
+                            break;
+                        case "up":
+                            $("#up").attr("src", "image/up1.png");
+                            RobotGo("front");
+                            break;
+                        case "stop":
+                            $("#stop").attr("src", "image/start.png");
+                            RobotGo("stop");
+                            break;
+                        case "IMU":
+                            lock = true;
+                            break;
+                        case "map":
+                            break;
+                        default:
+                            break;
+
+                    }
+                    break;
+                case "touchend":
+                    RobotGo("stop");
+                    switch (event.target.id) {
+                        case "left":
+                            $("#left").attr("src", "image/left.png");
+                            break;
+                        case "right":
+                            $("#right").attr("src", "image/right.png");
+                            break;
+                        case "down":
+                            $("#down").attr("src", "image/down.png");
+                            break;
+                        case "up":
+                            $("#up").attr("src", "image/up.png");
+                            break;
+                        case "stop":
+                            $("#stop").attr("src", "image/stop.png");
+                            break;
+                        case "IMU":
+                            lock = false;
+                            break;
+                        case "map":
+                            break;
+                        default:
+                            break;
+
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+        }
+
+
+        function showMap() {
+
+            var viewer = new ROS2D.Viewer({
+                divID: 'nav',
+                width: 800,
+                height: 800
+            });
+
+
+            var nav = NAV2D.OccupancyGridClientNav({
+                ros: ros,
+                rootObject: viewer.scene,
+                continuous: true,
+                withOrientation: true,
+                viewer: viewer,
+                serverName: '/move_base'
+            });
+        }
+        function subscribePostion() {
+            poseTopic.subscribe(showPostion);
+        }
+        function unsubscribePostion(){
+            poseTopic.unsubscribe(showPostion);
+        }
+
+        function showPostion(pose) {
+            console.log("getPose");
+            var html = "当前位置: <br />";
+            html += "position.x:" + pose.position.x + "<br />";
+            html += "position.y:" + pose.position.x + "<br />";
+            html += "position.z:" + pose.position.x + "<br />";
+            html += "orientation.x:" + pose.orientation.x + "<br />";
+            html += "orientation.y:" + pose.orientation.y + "<br />";
+            html += "orientation.z:" + pose.orientation.z + "<br />";
+            html += "orientation.w:" + pose.orientation.w;
+            $("#map-message").html(html);
+        }
+
+    </script>
+
+</head>
+<body>
+
+    <div data-role="page" id="main">
+        <div data-role="header">
+            <h1>噼里啪啦小车控制系统</h1>
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="#handle" data-icon="grid" data-transition="flip">手动控制</a></li>
+                    <li><a href="#vocie" data-icon="star" data-transition="turn">声音控制</a></li>
+                    <li><a href="#IMU" data-icon="info" data-transition="flip">IMU控制</a></li>
+                    <li><a href="#setting" data-icon="gear" data-transition="turn" style="color: wheat;">配置</a></li>
+                    <li><a href="#testPage" data-icon="gear" data-transition="turn" style="color: red;">测试页面</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div data-role="content">
+            <div id="status" style="width: 20%; position: absolute; right: 0; font-size: 2em">尝试连接中...</div>
+            <p>欢迎光临哈工大机器人集团</p>
+            <p id=" P1">No device orientation data</p>
+            <p id="P2">No device motion data</p>
+        </div>
+
+
+    </div>
+
+    <div data-role="page" id="handle">
+        <div data-role="content">
+            <a href="#main" id="handle-back" data-transition="slide" data-role="button" data-icon="back" data-theme="a" data-direction="reverse" style="position: absolute; right: 5%">返回</a>
+            <div data-role="content" style="width: 700px; height: 700px; margin: auto;">
+                <div style="width: 200px; height: 200px; margin-left: 250px">
+                    <img id="up" src="image/up.png" />
+                </div>
+                <div style="width: 100%; height: 200px; margin-top: 33px">
+                    <img id="left" src="image/left.png" />
+                    <img id="stop" src="image/stop.png" style="margin-left: 48px" />
+                    <img id="right" src="image/right.png" style="float: right" />
+                </div>
+                <div style="width: 200px; height: 200px; margin-left: 250px; margin-top: 33px">
+                    <img id="down" src="image/down.png" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div data-role="page" id="vocie">
+        <a href="#main" id="vocie-back" data-transition="slide" data-role="button" data-icon="back" data-theme="b" data-direction="reverse" style="float: right">返回</a>
+        <p class="text-info">语音识别结果</p>
+        <img id="talk" src="image/talk1.png" style="margin-top: 5%; margin-left: 5%; width: 150px; height: auto;" />
+        <img id="vocie-gif" src="image/voicechat.gif" style="display: none" />
+    </div>
+    <div data-role="page" id="IMU">
+        <a href="#main" id="IMU-back" data-transition="slide" data-role="button" data-icon="back" data-theme="a" data-direction="reverse" style="float: right">返回</a>
+        <p id="dataContainerOrientation">No device orientation data</p>
+        <p id="dataContainerMotion">No device motion data</p>
+    </div>
+    <div data-role="page" id="setting">
+        <a href="#main" data-transition="slide" data-role="button" data-icon="back" data-theme="e" data-direction="reverse" style="float: right">返回</a>
+        <div id="nav"></div>
+    </div>
+    <div data-role="page" id="testPage">
+        <a href="#main" id="testPage-back" data-transition="slide" data-role="button" data-icon="back" data-theme="e" data-direction="reverse" style="float: right">返回</a>
+                <p id="map-message">当前触摸位置：</p>
+        <img id="map" src="image/map.png" style="width:400px;height:auto" />
+
+
+    </div>
+
+</body>
+</html>

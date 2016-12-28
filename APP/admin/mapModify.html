@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>导航</title>
+    <link rel="stylesheet" href="../css/materialize.min.css">
+    <script type="text/javascript" src="../js/common/easeljs.min.js"></script>
+    <script type="text/javascript" src="../js/common/eventemitter2.min.js"></script>
+    <script type="text/javascript" src="../js/common/roslib.min.js"></script>
+    <script type="text/javascript" src="../js/common/ros2d.min.js"></script>
+    <script type="text/javascript" src="../js/common/nav2d.min.js"></script>
+    <script type="text/javascript" src="../js/common/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/common/materialize.min.js"></script>  
+    <style>
+    </style>
+     <style>
+* { margin: 0; padding: 0; }
+.body { width: 800px; background-color: green; }
+.fa { width: 800px; margin: 0 auto; }
+.top { margin: 20px 0; color: #304050; font-size: 18px; font-weight: bold; }
+.top input { width: 40px; height: 40px; border: 1px solid #fff; border-radius: 4px; background: #ddd; }
+.top .i1 { background: #000000; }
+.top .i2 { background: #7f7f7f; }
+.top .i3 { background: #ffffff; }
+.top .i4 { background: #00FFFF; }
+.top .i5 { background: #808080; }
+.top .i6 { background: #FF8000; }
+.top .i7 { background: #408080; }
+.top .i8 { background: #8000FF; }
+.top .i9 { background: #CCCC00; }
+#canvas { background: #eee; cursor: default; }
+.font input { font-size: 14px; }
+.top .grea { background: #aaa; }
+#createMapMode {width: 300px;height: 230px;position: absolute;background-color: #fff;z-index: 999999;left:230px;top:300px;border: solid 1px #f4f4f4;color:#000;border-radius: 10px;}
+    </style>
+</head>
+  
+<body style="width: 800px;">
+      <div id="mapcont" style="width: 800px;height:840px;background-color: #000;overflow: auto;"><canvas  id="my_canvas"></canvas></div>
+          <div class="fa" style="font-family: 幼圆">
+        <div class="top">
+            <div style="float: left;width: 100px;height: 50px;line-height: 40px;margin-left: 20px;">画笔模式：</div>
+            <div id="color" style="float: left;width:140px;height: 50px;">
+            <input class="i1" type="button" value="" />
+            <input class="i2" type="button" value=""  hidden />
+            <input class="i3" type="button" value=""  style="border:solid 1px #000;"/>
+            </div>
+
+            <div class="font" id="font" style="float:left;width: 250px;height: 50px;margin-left: 0px;">
+                画笔宽度：
+                <input type="button" value="细" />
+                <input type="button" value="中" class="grea" />
+                <input type="button" value="粗" />
+            </div>
+            <div class="font" id="font2" style="float:left;width: 230px;height: 50px;line-height: 50px; margin-left: 20px;">
+                <div style="float:left">地图移动：</div>
+                <div id="move-mdifymap" style="float:left;width: 100px;line-height: 44px;text-align: center; height: 44px;border-radius: 3px;border:solid 1px #000;background-color: #dddddd;">取消</div>
+            </div>
+        </div>
+        <div style="clear:both;color:red;margin-left: 30px;">黑色画笔表示"障碍",白色画笔表示"可行走区域",通过黑色画笔画线封住出口等禁止行走区域。</div>
+        <div style="width: 800px;height: 140px;font-size: 25px;clear: both;padding-left: 160px;padding-top: 40px;">
+        	<a id="sendMap" class="waves-effect waves-light" style="display: block; float: left;width: 200px;height: 70px;background-color: #304050;line-height: 70px;text-align: center;color:#ffffff;margin-left: 100px;box-shadow: 5px 5px  15px rgba(0,0,0,0.4);">保存修改</a>
+        </div>
+    </div>
+    <div id="createMapMode" hidden>
+        <div style="width: 300px;height: 150px;font-size: 25px;text-align: center;line-height: 150px;">您是否要保存地图？</div>
+        <div style="width: 300px;height: 40px;">
+          <div id="noSavaMap" style="width: 60px;height: 40px;text-align: center;line-height: 40px; float: left;font-size: 20px;border: solid 1px #a5a4a4;border-radius: 3px;margin-left: 60px;">否</div> <div id="isSavaMap" style="text-align: center;line-height: 40px;  width: 60px;height: 40px;float: left;font-size: 20px;border: solid 1px #a5a4a4;border-radius: 3px;margin-left: 50px;">是</div>
+        </div>
+        </div>
+ <div id="mymap-save" hidden style="position: absolute;width: 120px;height: 260px;z-index: 1000;left: 260px;top: 260px;">                
+    <div class="load" style="width: 200px;height: 200px;padding-left: 10px;"><img src="../image/load.gif" alt=""></div>
+    <div id="saveMapState" style="color:red;width:200px;font-size: 20px;font-weight: bold;text-align: center;">正在保存中......</div>           
+ </div>
+  <div id="mymap-save2" hidden style="position: absolute;width: 640px;height: 382px;z-index: 1000;left: 60px;top: 200px;background: url(../image/scu.png) no-repeat;">                
+    <div id="saveQuit" style="color:red;width:200px;font-size: 20px;font-weight: bold;text-align: center;margin-left: 260px;margin-top: 270px;width: 120px;height: 44px;color: #fff;line-height: 44px;text-align: center;border: solid 1px #fff;border-radius: 5px;">关闭</div>           
+ </div>
+</body>
+     <script type="text/javascript">
+         var ros = new ROSLIB.Ros({
+             url: 'ws://192.168.0.7:9090'
+         });
+           var rosTopic = new ROSLIB.Topic({
+             ros: ros,
+             name: '/map_edit',
+             messageType: 'nav_msgs/OccupancyGrid',
+             compression: 'png'
+         });
+
+      var set_map = new ROSLIB.Topic({
+            ros: ros,
+            name: '/map_edit_as',
+            messageType: 'nav_msgs/OccupancyGrid'
+        });
+              var cmd_string = new ROSLIB.Topic({
+            ros: ros,
+            name: '/system_shell/cmd_string',
+            messageType: 'std_msgs/String'
+        });
+      var string_Map = new ROSLIB.Message({
+            data: 'navigation',
+        });
+        var uint8data_new = new Array();
+        var data_map = new ROSLIB.Message({
+            header: { frame_id: "/map", seq: 0 },
+            info: { resolution: 0.05, width: 800, height: 800, origin: { position: { x: 0, y: 0, z: 0 }, orientation: { x: 0, y: 0, z: 0, w: 1 } } },
+
+            data: uint8data_new
+        });
+//获取状态
+  navigator_cmd = new ROSLIB.Message({
+    data: "cancel"
+  });
+var ShellFeedback = new ROSLIB.Topic({
+    ros: ros,
+    name: '/system_shell/shell_feedback',
+    messageType: 'std_msgs/String'
+});
+
+var shellTopic = new ROSLIB.Topic({
+     ros: ros,
+     name: "/system_shell/shell_string",
+     messageType: "std_msgs/String"
+ });
+//获取修改地图保存完成状态
+function getMapeditStatus(){
+navigator_cmd.data = 'roslaunch bringup map_edit_as_saver.launch; rostopic pub -1 /system_shell/shell_feedback std_msgs/String "map_edit_ok"';
+shellTopic.publish(navigator_cmd);
+}
+  //状态回调函数
+ShellFeedback.subscribe(function(data){
+      switch (data.data) {
+            case "map_edit_ok":
+            $("#mymap-save").hide();
+            $("#mymap-save2").show();
+                break;
+            case "joy_on":
+                break;
+            case "joy_off":
+                 //手柄状态 关
+                break;
+            default:
+                break;
+
+        }
+});
+$("#saveQuit").click(function(){
+     $("#mymap-save2").hide();
+});
+       var imageDataMap;
+       rosTopic.subscribe(function (message) {
+           imageDataMap = message;
+             rosTopic.unsubscribe();
+             var canvas = document.getElementById('my_canvas');
+             var context = canvas.getContext('2d');
+
+
+
+             canvas.width = message.info.width;
+             canvas.height = message.info.height;
+
+             var imageData = context.createImageData(canvas.width, canvas.height);
+             for (var row = 0; row < canvas.height; row++) {
+                 for (var col = 0; col < canvas.width; col++) {
+                     // determine the index into the map data
+                     var mapI = col + ((canvas.height - row - 1) * canvas.width);
+                     // determine the value
+                     var data = message.data[mapI];
+                     var val;
+                     if (data === 100) {
+                         val = 0;
+                       
+                     } else if (data === 0) {
+                         val = 255;
+                     } else {
+                         val = 127;
+                     }
+
+                     // determine the index into the image data array
+                     var i = (col + (row * canvas.width)) * 4;
+                     // r
+                     imageData.data[i] = val;
+                     // g
+                     imageData.data[++i] = val;
+                     // b
+                     imageData.data[++i] = val;
+                     // a
+                     imageData.data[++i] = 255;
+                 }
+             }
+             context.putImageData(imageData, 0, 0);
+            
+         })
+       var ismovemap=0;
+       $("#move-mdifymap").click(function(){
+         if (ismovemap==0) {
+            ismovemap=1;
+              $("#move-mdifymap").text("开启");
+              $("#mapcont").css("overflow","hidden");
+         }else if (ismovemap==1) {
+             ismovemap=0;
+            $("#move-mdifymap").text("取消");
+            $("#mapcont").css("overflow","auto");
+         }
+
+       });
+       
+    </script>
+
+    <script>
+    (function () {
+
+     var scrollSize;
+     var scrollSizeTop;
+     var scrollSizeLeft;
+     scrollSizeTop=0;
+     scrollSizeLeft=0;
+     scrollSize=document.getElementById("mapcont");
+      scrollSize.onscroll=function(){
+        scrollSizeTop=scrollSize.scrollTop;
+        scrollSizeLeft=scrollSize.scrollLeft;
+      }
+
+    
+
+   
+        var paint = {
+            init: function () {
+                this.load();
+
+            },
+            load: function () {
+                this.x = [];//记录鼠标移动时的X坐标
+                this.y = [];//记录鼠标移动时的Y坐标
+                this.clickDrag = [];
+                this.lock = false;//鼠标移动前，判断鼠标是否按下
+                this.isEraser = false;
+                this.storageColor = "#000000";
+                this.eraserRadius = 10;//擦除半径值
+                this.color = ["#000000", "#7f7f7f", "#ffffff", "#00FFFF", "#808080", "#FF8000", "#408080", "#8000FF", "#CCCC00"];//画笔颜色值
+                this.fontWeight = [2, 5, 8];
+                this.$ = function (id) { return typeof id == "string" ? document.getElementById(id) : id; };
+                this.canvas = this.$("my_canvas");
+                if (this.canvas.getContext) {
+                } else {
+                    //alert("您的浏览器不支持 canvas 标签");
+                    return;
+                }
+                this.cxt = this.canvas.getContext('2d');
+                this.cxt.lineJoin = "round";//context.lineJoin - 指定两条线段的连接方式
+                this.cxt.lineWidth = 5;//线条的宽度
+                this.iptClear = this.$("clear");
+                this.revocation = this.$("revocation");
+                this.imgurl = this.$("imgurl");//图片路径按钮
+                this.w = this.canvas.width;//取画布的宽
+                this.h = this.canvas.height;//取画布的高 
+                this.touch = ("createTouch" in document);//判定是否为手持设备
+                this.StartEvent = this.touch ? "touchstart" : "mousedown";//支持触摸式使用相应的事件替代
+                this.MoveEvent = this.touch ? "touchmove" : "mousemove";
+                this.EndEvent = this.touch ? "touchend" : "mouseup";
+                this.bind();
+            },
+            bind: function () {
+                var t = this;
+                this.canvas['on' + t.StartEvent] = function (e) {
+                    var touch = t.touch ? e.touches[0] : e;
+                    var _x = touch.clientX - touch.target.offsetLeft+scrollSizeLeft;//鼠标在画布上的x坐标，以画布左上角为起点
+                    var _y = touch.clientY - touch.target.offsetTop+scrollSizeTop;//鼠标在画布上的y坐标，以画布左上角为起点             
+                    if (t.isEraser) {
+                        t.resetEraser(_x, _y, touch);
+                    } else {
+                        t.movePoint(_x, _y);//记录鼠标位置
+                        t.drawPoint();//绘制路线
+                    }
+                    t.lock = true;
+                };
+                /*鼠标移动事件*/
+                this.canvas['on' + t.MoveEvent] = function (e) {
+                    var touch = t.touch ? e.touches[0] : e;
+                    if (t.lock)//t.lock为true则执行
+                    {
+                        var _x = touch.clientX - touch.target.offsetLeft+scrollSizeLeft;//鼠标在画布上的x坐标，以画布左上角为起点
+                        var _y = touch.clientY - touch.target.offsetTop+scrollSizeTop;//鼠标在画布上的y坐标，以画布左上角为起点
+                        if (t.isEraser) {
+                            t.resetEraser(_x, _y, touch);
+                        }
+                        else {
+                            t.movePoint(_x, _y, true);//记录鼠标位置
+                            t.drawPoint();//绘制路线
+                        }
+                    }
+                };
+                this.canvas['on' + t.EndEvent] = function (e) {
+                    t.lock = false;
+                    t.x = [];
+                    t.y = [];
+                    t.clickDrag = [];
+                    clearInterval(t.Timer);
+                    t.Timer = null;
+
+                };
+                this.changeColor();
+            },
+            movePoint: function (x, y, dragging) {
+                /*将鼠标坐标添加到各自对应的数组里*/
+                this.x.push(x);
+                this.y.push(y);
+                this.clickDrag.push(y);
+            },
+            drawPoint: function (x, y, radius) {
+                for (var i = 0; i < this.x.length; i++)//循环数组
+                {
+                    this.cxt.beginPath();//context.beginPath() , 准备绘制一条路径
+
+                    if (this.clickDrag[i] && i) {//当是拖动而且i!=0时，从上一个点开始画线。
+                        this.cxt.moveTo(this.x[i - 1], this.y[i - 1]);//context.moveTo(x, y) , 新开一个路径，并指定路径的起点
+                    } else {
+                        this.cxt.moveTo(this.x[i] - 1, this.y[i]);
+                    }
+                    this.cxt.lineTo(this.x[i], this.y[i]);//context.lineTo(x, y) , 将当前点与指定的点用一条笔直的路径连接起来
+                    this.cxt.closePath();//context.closePath() , 如果当前路径是打开的则关闭它
+                    this.cxt.stroke();//context.stroke() , 绘制当前路径
+                }
+            },
+            clear: function () {
+                this.cxt.clearRect(0, 0, this.w, this.h);//清除画布，左上角为起点
+            },
+            redraw: function () {
+                /*撤销*/
+                this.cxt.restore();
+
+            },
+            preventDefault: function (e) {
+                /*阻止默认*/
+                var touch = this.touch ? e.touches[0] : e;
+                if (this.touch) touch.preventDefault();
+                else window.event.returnValue = false;
+            },
+            changeColor: function () {
+                /*为按钮添加事件*/
+                var t = this, iptNum = this.$("color").getElementsByTagName("input"), fontIptNum = this.$("font").getElementsByTagName("input");
+                for (var i = 0, l = iptNum.length; i < l; i++) {
+                    iptNum[i].index = i;
+                    iptNum[i].onclick = function () {
+                        t.cxt.save();
+                        t.cxt.strokeStyle = t.color[this.index];
+                        t.storageColor = t.color[this.index];
+                        // t.$("error").style.color = "#fff";
+                        // t.$("error").innerHTML = "橡皮擦模式：";
+                        t.cxt.strokeStyle = t.storageColor;
+                        t.isEraser = false;
+                    }
+                }
+                for (var i = 0, l = fontIptNum.length; i < l; i++) {
+                    t.cxt.save();
+                    fontIptNum[i].index = i;
+                    fontIptNum[i].onclick = function () {
+                        t.changeBackground(this.index);
+                        t.cxt.lineWidth = t.fontWeight[this.index];
+                        // t.$("error").style.color = "#000";
+                        // t.$("error").innerHTML = "橡皮擦模式：";
+                        t.isEraser = false;
+                        t.cxt.strokeStyle = t.storageColor;
+                    }
+                }
+            },
+            changeBackground: function (num) {
+                /*添加画笔粗细的提示背景颜色切换，灰色为当前*/
+                var fontIptNum = this.$("font").getElementsByTagName("input");
+                for (var j = 0, m = fontIptNum.length; j < m; j++) {
+                    fontIptNum[j].className = "";
+                    if (j == num) fontIptNum[j].className = "grea";
+                }
+            },
+            getUrl: function () {
+                this.$("html").innerHTML = this.canvas.toDataURL();
+                document.getElementById("image_load").src = this.canvas.toDataURL();
+
+            },
+            resetEraser: function (_x, _y, touch) {
+
+                /*使用橡皮擦-提醒*/
+                var t = this;
+                this.cxt.lineWidth = 10;
+                /*source-over 默认,相交部分由后绘制图形的填充(颜色,渐变,纹理)覆盖,全部浏览器通过*/
+                t.cxt.globalCompositeOperation = "destination-out";
+                t.cxt.beginPath();
+                t.cxt.arc(_x, _y, t.eraserRadius, 0, Math.PI * 2);
+                t.cxt.strokeStyle = "rgba(0,0,0,0)";
+                t.cxt.fill();
+                t.cxt.globalCompositeOperation = "source-over"
+            }
+        };
+        paint.init();
+    })();
+
+    document.getElementById("sendMap").addEventListener('click', function(){
+    	 $("#createMapMode").show(); 
+    });
+
+   $("#noSavaMap").click(function(){
+         $("#createMapMode").hide(); 
+   });
+   $("#isSavaMap").click(function(){
+        $("#createMapMode").hide(); 
+        $("#mymap-save").show();
+        send_map();
+        $("#saveMapState").text("正在保存中...");
+        getMapeditStatus();
+   });
+
+
+
+
+        var uint8data = new Array();
+        function send_map() {
+            string_Map.data = 'save_as_map_edit';
+            cmd_string.publish(string_Map);
+
+            uint8data = convert(imageDataMap);
+            data_map.data = uint8data;
+            data_map.info = imageDataMap.info;
+
+            set_map.publish(data_map);        
+        }
+        function convert(Message_Image) {
+
+           var cxtMap = document.getElementById("my_canvas").getContext("2d");
+             var canvas = document.getElementById('my_canvas');
+            var imgData = cxtMap.getImageData(0, 0, canvas.width, canvas.height);
+
+             for (var row = 0; row < canvas.height; row++) {
+                 for (var col = 0; col < canvas.width; col++) {
+
+                     // determine the index into the map data
+                     var j = col + ((canvas.height - row - 1) * canvas.width);
+                     // determine the index into the image data array
+                     var i = (col + (row * canvas.width)) * 4;
+
+                switch (imgData.data[i]) {
+                    case 0:
+                        uint8data[j] = 100;
+                        break;
+                    case 255:
+                        uint8data[j] = 0;
+                        break;
+                    case 127:
+                        uint8data[j] = -1;
+                        break;
+                    default:
+                        uint8data[j] = 100;
+                        break;
+                }
+                     
+                 }
+             }
+            return uint8data;
+        };
+</script>

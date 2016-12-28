@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content=" width=device-width, initial-scale=1">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache, must-revalidate">
+    <meta http-equiv="expires" content="0">
+    <title></title>
+    <link rel=" stylesheet" href="css/normalize.css">
+    <link rel=" stylesheet" href="css/jquery.mobile.css">
+    <link rel=" stylesheet" href="css/keyboard.css" />
+    <link rel=" stylesheet" href="css/materialize.min.css">
+    <link rel=" stylesheet" href="css/iconfont.css">
+    <link rel=" stylesheet" href="css/backend.css">
+
+    <link rel=" stylesheet" href="css/hrg.css">
+</head>
+<body id="body" onload="init()">
+    <!--  ==================================================        home页面        =================================================================== -->
+    <div id="danger" hidden>
+        <div class="dangerBox" style="background: url(image/danger.png); background-repeat: no-repeat;"></div>
+    </div>
+    <div id="navVideoBox" class="danger" hidden>
+        <div class="dangerBox" style="background:none;background-color: #000;">
+            <video id="navVideo" src="video/video.mp4"  controls style="width: 100%;height: 100%;"></video>
+        </div>
+    </div>
+    <div data-role="page" class="homemain" id="homemain">
+        <!-- 语音唤醒 -->
+        <div class="homevoice">
+            <div class="homevoice-icon"><i class="iconfont" id="homevoice-icon" style="color:#ffffff;font-size: 45px;"></i></div>
+            <div id="homevoice-name"></div>
+        </div>
+        <!-- 菜单 -->
+        <div class="home-nav">
+            <div class="nav-top" id="nav-top">
+                <a id="nav-btn1" class="nav-btn"><img src="image/refresh.png" class="refresh"></a>
+                <a id="nav-btn2" class="nav-btn"><img src="image/theme.png"></a>
+                <a id="nav-btn3" class="nav-btn" href="#loginmain" data-transition="slide"><img id="setting" src="image/setting.png"></a>
+            </div>
+            <div class="nav-bottom">
+                <a id="nav-toggle"><img src="image/toggle-up.png" id="nav-img"></a>
+            </div>
+        </div>
+        <div class="navbox-cont">
+            <div class="navbox-cont-l">
+                <div class="navbox-left">
+                    <div class="navbox-l-main">
+                        <div class="nav-l-list"><img src="image/navigator.png" id="navigator"></div>
+                        <div class="nav-l-list"><img src="image/service.png" id="service"></div>
+                    </div>
+                    <div class="navbox-l-btn"></div>
+                </div>
+            </div>
+            <div class="navbox-cont-r">
+                <div class="navbox-right">
+                    <div class="navbox-r-main">
+                        <div class="nav-r-list"><img src="image/face.png" id="face"></div>
+                        <div class="nav-r-list"><img src="image/voice.png" id="voice" disabled></div>
+                    </div>
+                    <div class="navbox-r-btn"></div>
+                </div>
+            </div>
+        </div>
+        <!-- 拍照 -->
+        <div class="homePhoto">
+            <p>
+                <a id="openPhoto"><img src="image/h-03.png" alt=""></a>
+            </p>
+            <p class="openPhoto-p">拍照</p>
+        </div>
+        <div id="photoCont" hidden>
+            <div class="photoContBox">
+                <div class="photoContBox-top">
+                    <div class="photoContBox-top-left">
+                        <img id="photo_image" src="image/camerabgbefor.png" width="418" height="360">
+                        <div class="photoTime">5</div>
+                    </div>
+                    <div class="photoContBox-top-right" >
+                        <div class="catchPhoto1">
+                            <img id="catch_image" src="image/camerabg.png" width="100%" />
+                        </div>
+                        <div class="catchPhoto2" hidden>
+                        </div>
+                    </div>
+                </div>
+                <div class="photoContBox-bottom">
+                    <div class="catchPhoto-btn"></div>
+                    <div class="catchPhoto-save" hidden></div>
+                </div>
+            </div>
+        </div>
+        <!-- 业务展示 -->
+        <div class="service-main">
+            <div class="service-mainbg">
+                <a id="service-btn1" class="service-btn z-depth-3 goin-mode" href="#zonglan" data-transition="none" style="background:url(image/ser-btn.png);" hidden ></a>
+                <a id="service-btn2" class="service-btn z-depth-3 goin-mode" href="#zonglan" data-transition="none" style="background:url(image/ser-btn.png);" hidden ></a>
+                <a id="service-btn3" class="service-btn z-depth-3 goin-mode" href="#zonglan" data-transition="none" style="background:url(image/ser-btn.png);" hidden ></a>
+                <a id="service-btn4" class="service-btn z-depth-3 goin-mode" href="#zonglan" data-transition="none" style="background:url(image/ser-btn.png);" hidden ></a>
+                <a id="service-btn5" class="service-btn z-depth-3 goin-mode" href="#zonglan" data-transition="none" style="background:url(image/ser-btn.png);" hidden ></a>
+                <a id="service-btn6" class="service-btn z-depth-3 goin-mode" href="#zonglan" data-transition="none" style="background:url(image/ser-btn.png);" hidden ></a>
+                <a id="service-btn7" class="service-btn z-depth-3 goin-mode" href="#zonglan" data-transition="none" style="background:url(image/ser-btn.png);" hidden ></a>
+                <a id="service-btn8" class="service-btn z-depth-3 goin-mode" href="#zonglan" data-transition="none" style="background:url(image/ser-btn.png);" hidden ></a>
+            </div>
+        </div>
+        <div class="service-closebtn"></div>
+        <!-- 地图导航 -->
+        <div class="navigator-main">
+            <div class="navigator-mainbg">
+                <div class="navigator-main-l">
+                    <div id="gongan" class="waves-effect waves-light" style="border-radius: 50px; position: absolute;left: 163px;top:354px;width:90px;height:37px;"></div>
+                    <div class="map-bottom">
+                        <div class="map-move">
+                            <a class="btn-floating btn-large waves-effect waves-light light-blue darken-4">返回</a>
+                        </div>
+                         <div class="map-auto">
+                            <a class="btn-floating btn-large waves-effect waves-light green z-depth-3">自动</a>
+                        </div>
+                        <div class="map-stop">
+                            <a class="btn-floating btn-large waves-effect waves-light red z-depth-3">停止</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="navigator-main-r">
+                    <div class="locationName-topbtn" style="visibility: hidden;"></div>
+                    <div class="locationName"></div>
+                    <div class="locationName-botbtn" style="visibility: hidden;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="navigator-closebtn"></div>
+        <!-- 语音识别 -->
+        <div class="voice-main">
+            <div class="voice-mainbg">
+                <div class="voice-cont"></div>
+            </div>
+        </div>
+        <div class="voice-state" id="voice-state1" style="background: url(image/sayState1.png) no-repeat;"></div>
+        <div class="voice-state" id="voice-state2" style="background: url(image/sayState2.png) no-repeat;"></div>
+        <div class="voice-state" id="voice-state3" style="background: url(image/sayState3.png) no-repeat;"></div>
+        <div class="voice-state" id="voice-state4" style="background: url(image/sayState4.png) no-repeat;"></div>
+        <div class="voice-closebtn"></div>
+        <div class="voice-clearbtn"></div>
+        <div class="voice-mode" id="voice-mode1" style="background: url(image/mode1.png) no-repeat;"></div>
+        <div class="voice-mode" id="voice-mode2" style="background: url(image/mode2.png) no-repeat;"></div>
+        <div class="voice-language">
+            <div class="bobao"></div>
+        </div>
+        <!-- 语种 -->
+        <div class="voice-mandarin">小燕_普通话</div>
+        <div class="voice-henan">小燕_普通话</div>
+        <div class="voice-sichuan">小燕_普通话</div>
+        <div class="voice-guangdong">小燕_普通话</div>
+        <div class="voice-liang">小燕_普通话</div>
+        <div class="voice-lily">小燕_普通话</div>
+        <!-- 人脸识别 -->
+        <div class="face-main">
+            <div class="face-mainbg">
+                <div class="face-main-l">
+                    <div class="face-name"></div>
+                    <div class="face-age"></div>
+                    <div class="face-sex"></div>
+                    <div class="face-yanzhi"></div>
+                    <div class="face-smile"></div>
+                    <div class="face-equal"></div>
+                </div>
+                <div class="face-main-r">
+                    <img id="recog_image" src="image/camerabgbefor-.png" width="602" height="432">
+                </div>
+            </div>
+        </div>
+        <div class="face-closebtn"></div>
+        <!-- 电量 时间 天气 -->
+        <div class="home-mid">
+            <div class="power" style="color:#ffffff;font-family: Redocn;font-size: 30px;text-align: center;padding-top: 25px;text-shadow: 0 0 20px #ffffff;"></div>
+            <canvas id="pover-canv" width="142px" height="94px" style="position: absolute;left: 48px;top:806px;z-index: 888"></canvas>
+            <div class="hometime">
+                <div id="hometime-time" class="robotTime" style="font-size: 80px;height: 80px;line-height: 80px;"></div>
+                <div style="font-size: 18px;height: 25px;margin-left: 3px;">
+                    <span id="hometime-date" class="robotDate1" style="display: block;float: left; width: 72px;font-size: 18px;line-height: 30px;"></span>
+                    <span id="hometime-week" class="robotWeek" style="display: block;float: left; margin-left: 0px;width: 18px;width: 70px;margin-left:6px;"></span></div>
+            </div>
+            <div class="tianqi">
+                <div class="tianqi-cont3">
+                    <p id="tianqi-cont3-day">后天</p>
+                    <p id="tianqi-cont3-img"><img id="tianqi-icon3" src="image/weather/blank.png" style=" width: 45px;height: 45px;"></p>
+                    <p id="tianqi-cont3-temper"></p>
+                </div>
+                <div class="tianqi-cont2">
+                    <p id="tianqi-cont2-day">明天</p>
+                    <p id="tianqi-cont2-img"><img id="tianqi-icon2" src="image/weather/blank.png" style=" width: 45px;height: 45px;"></p>
+                    <p id="tianqi-cont2-temper"></p>
+                </div>
+                <div class="tianqi-cont">
+                    <p id="tianqi-1">今天</p>
+                    <p id="tianqi-2"></p>
+                    <p id="tianqi-3"></p>
+                    <p id="tianqi-4"></p>
+                </div>
+                <div class="tianqi-icon"><img id="tianqi-icon" src="image/weather/blank.png"></div>
+                <div class="tianqi-city" id="tianqi-city"></div>
+            </div>
+            <div class="tianqi-cover"></div>
+        </div>
+        <!-- 底部广告 -->
+        <video id="adVideo" src="video/video.mp4" class="adBottom" width="1080" height="608" controls autoplay loop style="visibility: hidden;">
+        </video>
+       <div id="adSlide" class="slider" style="visibility: hidden;">
+       <ul class="slides" style="width: 1080px;" >
+
+      </ul>
+    </div>
+   <iframe id="adIframe" class="adBottom" src="http://www.hitrobotgroup.com/" frameborder="0" width="1080" height="637" style="visibility: hidden;"></iframe>
+
+
+        <!-- 系统提示 -->
+        <div class="system-tip" hidden>
+            <p class="system-tip-img"><img src="image/system-tip2.png"></p>
+            <p class="system-tip-title"></p>
+        </div>
+        <!-- 前端窗口 -->
+        <div class="winbox">
+            <div class="win"><img src="image/wingif.gif"></div>
+        </div>
+        <!-- 公司logo -->
+        <div class="box-logo">HRG</div>
+        <!-- 按钮音效 -->
+        <audio id="audio-btn" src="audio/btn1.mp3" controls hidden></audio>
+        <audio id="audio-btn2" src="audio/btn2.mp3" controls hidden></audio>
+        <audio id="photo-video" src="audio/photo.wav" controls hidden></audio>
+    </div>
+    <!--  ==================================================        登陆页面        =================================================================== -->
+    <div data-role="page" class="login-main" id="loginmain">
+        <a class="login-back" href="#homemain" data-transition="flip">
+            <i class="iconfont" style="font-size: 40px;">&#xe608;</i>
+        </a>
+        <form>
+            <div style="margin-top: 514px;">
+                <input id="username" class="numkeyboard" id="numkeyboard1" type="text" style=" height: 93px;line-height: 98px; color: #189f8c;font-size: 40px;text-indent: 280px;border-color: #2a8579;">
+            </div>
+            <div>
+                <input id="password" class="numkeyboard" id="numkeyboard2" type="password" class="validate" style=" height: 84px;color: #189f8c;font-size: 40px;text-indent: 280px;">
+            </div>
+            <a class="login-submit waves-effect waves-teal" id="submit" style="display: block;"></a>
+        </form>
+    </div>
+    <!--  ==================================================        后台管理页面        =================================================================== -->
+    <div data-role="page" class="backmain" id="backmain">
+        <!-- 左侧菜单 -->
+        <div class="backmain-left">
+            <div class="backmain-left-top">
+           机器人后台管理系统
+            </div>
+            <div class="backmain-left-nav">
+                <ul class="collapsible " data-collapsible="accordion">
+                    <li>
+                        <div class="collapsible-header">系统运行参数</div>
+                        <div class="collapsible-body">
+                            <a class="waves-effect waves-light" id="functionSwitch">功能开关</a>
+<!--                             <a class="waves-effect waves-light" id="navigatorData">导航数据</a>
+                            <a class="waves-effect waves-light" id="runningData">运行数据</a> -->
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-header">界面设置</div>
+                        <div class="collapsible-body">
+                            <a class="waves-effect waves-light" id="settingCity">城市设置</a>
+                            <a class="waves-effect waves-light" id="settingService">业务展示设置</a>
+                            <a class="waves-effect waves-light" id="settingAd">底部广告设置</a>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-header" id="settingVoice">语音设置</div>
+                    </li>
+                    <li>
+                        <div class="collapsible-header" id="setting-FaceRegistration">人脸注册</div>
+                    </li>
+                    <li>
+                        <div class="collapsible-header">导航设置</div>
+                        <div class="collapsible-body">
+                            <a class="waves-effect waves-light" id="setting-createMap">自主建图</a>
+                            <a class="waves-effect waves-light" id="setting-modifyMap">修改地图</a>
+                            <a class="waves-effect waves-light" id="setting-settingMap">导航配置</a>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-header" id="hardwareTest-btn">机器人硬件检测</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- 右侧内容 -->
+        <div class="backmain-right">
+            <div class="backmain-right-top">
+                <div class="backmain-rt-r">
+                    <div class="backmain-rtr-m">
+                     <div class="backop" style="margin-left: 50px;">重启</div><div id="hd-reboot" class="backop" style="background: url(image/reboot.png) no-repeat;"></div>
+                     <div class="backop" style="margin-left: 100px;">关机</div><div id="hd-shutDown" class="backop" style="background: url(image/shutdown.png) no-repeat;"></div>
+                    </div>
+                    <a class="backmain-rtr-r" id="backmain-rtr-r" href="#homemain" data-transition="flip"><i class="iconfont" style="font-size:40px;">&#xe608;</i></a>
+                </div>
+            <div id="rebootMode" hidden style="background-color: #273645;position: absolute;left: 350px;top: 300px;height: 300px;width: 400px;padding-left: 100px;border-radius: 5px;">
+                    <div id="hd-text" style=" width: 300px;height: 150px;font-size: 25px;text-align: center;line-height: 150px;"></div>
+                    <div style=" width: 300px;height: 40px;">
+                        <div id="rebootMode-no" style=" width: 60px;height: 40px;text-align: center;line-height: 40px; float: left;font-size: 20px;border: solid 1px #a5a4a4;border-radius: 3px;margin-left: 45px;">取消</div>
+                        <div id="rebootMode-yes" style="text-align: center;line-height: 40px;  width: 60px;height: 40px;float: left;font-size: 20px;border: solid 1px #a5a4a4;border-radius: 3px;margin-left: 80px;">确定</div>
+                    </div>
+                </div>
+            </div>
+            <div class="backmain-cont1">
+                <div class="backmain-cont1-l"></div>
+                <div class="backmain-cont1-r1">
+                    <span><i class="iconfont">&#xe603;</i></span><span id="backmainTime" class="robotDate2" style="margin-left: 5px;"></span>
+                </div>
+                <div class="backmain-cont1-r1">
+                    <span style="margin-left: 20px;"><i class="iconfont">&#xe614;</i></span><span style="margin-left: 15px;">良好</span>
+                </div>
+                <div class="backmain-cont1-r2">
+                    <span style="margin-left: 25px;">系统日志数据</span><span style="margin-left: 25px;"><i class="iconfont">&#xe610;</i></span>
+                </div>
+                <div class="backmain-cont1-r3">
+                    <i class="iconfont">&#xe60f;</i>
+                </div>
+            </div>
+            <div class="backmain-cont2">
+                <div class="backmain-cont2-div">
+                    <div class="cont2-div-l1">电量</div>
+                    <div class="cont2-div-l2">
+                        <canvas id="poverData" width="95" height="95"></canvas>
+                    </div>
+                    <div class="cont2-div-l3">
+                        <span>INPUT:</span>
+                        <span>220~240Vac</span>
+                        <span style="margin-top:8px;">OUTPUT:</span>
+                        <span>dc 24V 10A</span>
+                    </div>
+                </div>
+                <div class="backmain-cont2-div">
+                    <div class="cont2-div-l1"><span>运行</span><span>内存</span></div>
+                    <div class="cont2-div-l2">
+                        <canvas id="storageData" width="95" height="95"></canvas>
+                    </div>
+                    <div class="cont2-div-l3">
+                        <span style="margin-top:25px;">4GB</span>
+                        <span id="useValue">USE：52%</span>
+                    </div>
+                </div>
+                <div class="backmain-cont2-div3">
+                    <span style="text-align: right;">激光导航</span>
+                    <span>障碍感知：0.06m-20m</span>
+                    <span>(可调，精度±10cm)</span>
+                </div>
+            </div>
+            <div class="backmain-cont3">
+                <div class="modeSwitch">
+                    <div class="modeSwitch-list" style="background: none;">
+                        <div style=" height: 52px;width: 464px;line-height: 50px;float: left;background: url(image/list1.png) repeat;padding-left: 10px;"><i style="font-size: 45px;font-weight: bold;" class="iconfont">&#xe627;</i>&nbsp;功能开关</div>
+
+                        <div id="functionSwitch-close" style=" height: 52px;width: 54px;line-height: 52px;text-align: center;float: left;background: url(image/list1.png) repeat;margin-left: 1px;"><i class="iconfont">&#xe608;</i></div>
+                    </div>
+                    <div class="modeSwitch-list" style="height:120px;padding-top:20px;">
+                        <div class="modeSwitch-list2" style="height:50px;margin-top:25px;width:120px;line-height: 30px;">手柄开关</div>
+
+                        <div  style="float: left; margin-left: 135px;width: 120px;height:30px;margin-top:30px;margin-left:200px;">
+                            <div style="float: left;">ON</div>
+                            <div class="switch" style="float: left; overflow:hidden;">
+                                <label>
+                                    <input id="shoubing" type="checkbox" ><span class="lever" style="background-color: #131c25;"></span></label>
+                            </div>
+                            <div style="float: left;">OFF</div>
+                        </div>
+                    </div>
+                    <div class="modeSwitch-list" style="height:120px;padding-top:20px;">
+                        <div class="modeSwitch-list2" style="margin-top:18px;">人脸识别开关</div>
+                        <div class="modeSwitch-list2" style="margin-left: 120px;width: 120px;height:30px;margin-top:30px;line-height: 30px;">
+                            <div style="float: left;">ON</div>
+                            <div class="switch" style="float: left; overflow:hidden;">
+                                <label>
+                                    <input id="faceRecog" type="checkbox"><span class="lever" style="background-color: #131c25;"></span></label>
+                            </div>
+                            <div style="float: left;">OFF</div>
+                        </div>
+                    </div>
+                    <div class="modeSwitch-list" >
+                        <div class="modeSwitch-list2" hidden>防跌落开关</div>
+                        <div class="modeSwitch-list2" style="margin-left: 135px;width: 120px;" hidden>
+                            <div style="float: left;padding-top: 5px">ON</div>
+                            <div class="switch" style="float: left;">
+                                <label>
+                                    <input id="dropStatus" type="checkbox"><span class="lever" style="background-color: #131c25;"></span></label>
+                            </div>
+                            <div style="float: left;padding-top: 5px">OFF</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="naviData">
+                    <div class="modeSwitch-list" style="background: none;">
+                        <div style=" height: 52px;width: 194px;line-height: 52px;float: left;background: url(image/list1.png) repeat;padding-left: 10px;"><i style="font-size: 30px;" class="iconfont">&#xe609;</i></div>
+                        <div id="navigatorData-close" style=" height: 52px;width: 54px;line-height: 52px;text-align: center;float: left;background: url(image/list1.png) repeat;margin-left: 1px;"><i class="iconfont">&#xe608;</i></div>
+                    </div>
+                    <div class="naviDataCont"></div>
+                    <div class="naviDataBottom">
+                        <div>
+                            <span style=" height: 40px;display: block;width: 80px;line-height: 40px; text-align: center;"><i class="iconfont">&#xe612;</i></span>
+                            <span style=" height: 40px;display: block;width: 80px;line-height: 40px;text-align: center;font-size: 14px;">数据</span>
+                        </div>
+                        <div>
+                            <span style=" height: 40px;display: block;width: 80px;line-height: 40px;text-align: center;"><i  style="color:#e86664;" class="iconfont">&#xe612;</i></span>
+                            <span style=" height: 40px;display: block;width: 80px;line-height: 40px;text-align: center;font-size: 14px;">数据</span>
+                        </div>
+                        <div>
+                            <span style=" height: 40px;display: block;width: 80px;line-height: 40px;text-align: center;"><i style="color:#0af2da" class="iconfont">&#xe612;</i></span>
+                            <span style=" height: 40px;display: block;width: 80px;line-height: 40px;text-align: center;font-size: 14px;">数据</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="interfaceBox">
+                    <div class="modeSwitch-list" style="background: none;">
+                        <div style=" height: 52px;width: 274px;line-height: 52px;float: left;background: url(image/list1.png) repeat;padding-left: 10px;"><i style="font-size: 50px;" class="iconfont">&#xe61a;</i></div>
+                        <div style=" height: 52px;width: 54px;line-height: 52px;text-align: center;float: left;margin-left: 1px;background: url(image/list1.png) repeat;"><i class="iconfont">&#xe600;</i></div>
+                        <div id="runningData-close" style=" height: 52px;width: 54px;line-height: 52px;text-align: center;float: left;background: url(image/list1.png) repeat;margin-left: 1px;"><i class="iconfont">&#xe608;</i></div>
+                    </div>
+                    <div class="modeSwitch-list" style="background: none;margin-top: 1px;">
+                        <div style=" height: 52px;width: 130px;line-height: 52px;text-align: center; float: left;background: url(image/list1.png) repeat;padding-left: 10px;">系统</div>
+                        <div style=" height: 52px;width: 130px;line-height: 52px;text-align: center;float: left;margin-left: 1px;background: url(image/list1.png) repeat;">服务器</div>
+                        <div style=" height: 52px;width: 122px;line-height: 52px;text-align: center;float: left;background: url(image/list1.png) repeat;margin-left: 1px;">界面</div>
+                    </div>
+                    <div style=" width: 100%;height: 146px;margin-top: 1px;background: url(image/list1.png) repeat;"></div>
+                    <div style=" width: 100%;height: 146px;margin-top: 1px;background: url(image/list1.png) repeat;"></div>
+                    <div style=" width: 100%;height: 146px;margin-top: 1px;background: url(image/list1.png) repeat;"></div>
+                    <div class="modeSwitch-list" style="background: none;margin-top: 1px;color:#0cfaea;">
+                        <div style=" height: 52px;width: 52px;line-height: 52px;text-align: center; float: left;background: url(image/list1.png) repeat;padding-left: 10px;"><i style="color:#0cfaea;" class="iconfont">&#xe61e;</i></div>
+                        <div style=" height: 52px;width: 278px;line-height: 52px;text-align: center;float: left;margin-left: 1px;background: url(image/list1.png) repeat;">提示信息</div>
+                        <div style=" height: 52px;width: 52px;line-height: 52px;text-align: center;float: left;background: url(image/list1.png) repeat;margin-left: 1px;"><i style="color:#0cfaea;" class="iconfont">&#xe626;</i></div>
+                    </div>
+                </div>
+                <div class="systemData">
+                    <div class="modeSwitch-list" style="background: none;">
+                        <div style=" height: 52px;width: 274px;line-height: 52px;float: left;background: url(image/list1.png) repeat;padding-left: 10px;"><i style="font-size: 30px;" class="iconfont">&#xe604;</i></div>
+                        <div style=" height: 52px;width: 54px;line-height: 52px;text-align: center;float: left;margin-left: 1px;background: url(image/list1.png) repeat;"><i class="iconfont">&#xe600;</i></div>
+                        <div id="systemData-close" style=" height: 52px;width: 54px;line-height: 52px;text-align: center;float: left;background: url(image/list1.png) repeat;margin-left: 1px;"><i class="iconfont">&#xe608;</i></div>
+                    </div>
+                    <div class="modeSwitch-list" style="background: none;margin-top: 1px;">
+                        <div style=" height: 52px;width: 60px;line-height: 52px;float: left;background: url(image/list1.png) repeat;padding-left: 10px;"><i class="iconfont">&#xe602;</i></div>
+                        <div style=" height: 52px;width: 200px;line-height: 52px;text-align: center;float: left;margin-left: 1px;background: url(image/list1.png) repeat;">共计点击次数：427</div>
+                        <div style=" height: 52px;width: 67px;line-height: 52px;text-align: center;float: left;background: url(image/list1.png) repeat;margin-left: 1px;"><i class="iconfont">&#xe60b;</i></div>
+                        <div style=" height: 52px;width: 55px;line-height: 52px;text-align: left;float: left;background: url(image/list1.png) repeat;">导出</div>
+                    </div>
+                    <div style=" width: 100%;height: 146px;margin-top: 1px;background: url(image/list1.png) repeat;"></div>
+                    <div style=" width: 100%;height: 146px;margin-top: 1px;background: url(image/list1.png) repeat;"></div>
+                    <div style=" width: 100%;height: 146px;margin-top: 1px;background: url(image/list1.png) repeat;"></div>
+                    <div class="modeSwitch-list" style="background: none;margin-top: 1px;color:#0cfaea;">
+                        <div style=" height: 52px;width: 191px;line-height: 52px;text-align: center; float: left;background: url(image/list1.png) repeat;padding-left: 10px;"><i style="color:#0cfaea;" class="iconfont">&#xe61c;</i></div>
+                        <div style=" height: 52px;width: 192px;line-height: 52px;text-align: center;float: left;background: url(image/list1.png) repeat;margin-left: 1px;"><i style="color:#0cfaea;" class="iconfont">&#xe61b;</i></div>
+                    </div>
+                </div>
+                   <div class="settingVoiceData">
+                    <div class="modeSwitch-list" style="background: none;width: 800px;">
+                        <div style=" height: 52px;width: 734px;line-height: 52px;float: left;background: url(image/list1.png) repeat;padding-left: 10px;"><i style="font-size: 30px;" class="iconfont">&#xe609;</i>&nbsp;&nbsp;<span>语种设置</span></div>
+                        <div id="settingVoiceData-close" style=" height: 52px;width: 54px;line-height: 52px;text-align: center;float: left;background: url(image/list1.png) repeat;margin-left: 1px;"><i class="iconfont">&#xe608;</i></div>
+                    </div>
+                    <div class="naviDataCont" style=" width: 800px;padding-top: 25px;height: 555px;">
+                    <div style="width:800px;height:460px;">
+                    <div style="float:left;margin-left:50px;width:200px;height:450px;">
+                        <p style="height:40px;"> <input type="checkbox" name="voiceCheck" value="xiaoyan"  style="display:inline;width:25px;height:25px;" />
+                      <span style="display:inline;font-size:20px;color:#fff;">小燕_普通话</span></p>
+                      <p style="height:40px;"> <input type="checkbox" name="voiceCheck" value="aisxyan" style="display:inline;width:25px;height:25px;" />
+                      <span style="display:inline;font-size:20px;color:#fff;">艳萍_普通话</span></p>
+                      <p style="height:40px;"> <input type="checkbox" name="voiceCheck" value="xiaoyu"  style="display:inline;width:25px;height:25px;" />
+                      <span style="display:inline;font-size:20px;color:#fff;">小宇_普通话</span></p>
+                      <p style="height:40px;"> <input type="checkbox" name="voiceCheck" value="xiaofeng" style="display:inline;width:25px;height:25px;" />
+                      <span style="display:inline;font-size:20px;color:#fff;">宇峰_普通话</span></p>
+                       <p style="height:40px;"> <input type="checkbox" name="voiceCheck"  value="xiaoqi" style="display:inline;width:25px;height:25px;" />
+                       <span style="display:inline;font-size:20px;color:#fff;">小琪_普通话</span></p>
+                       <p style="height:40px;"> <input type="checkbox" name="voiceCheck" value="aisnn" style="display:inline;width:25px;height:25px;" />
+                        <span style="display:inline;font-size:20px;color:#fff;">楠楠_普通话</span></p>
+                       <p style="height:40px;"> <input type="checkbox" name="voiceCheck" value="dalong"  style="display:inline;width:25px;height:25px;" />
+                       <span style="display:inline;font-size:20px;color:#fff;">大龙_粤语</span></p>
+                       <p style="height:40px;"> <input type="checkbox" name="voiceCheck" value="xiaomei" style="display:inline;width:25px;height:25px;" />
+                       <span style="display:inline;font-size:20px;color:#fff;">小梅_粤语</span></p>
+                       <p style="height:40px;"> <input type="checkbox" name="voiceCheck" value="aisxlin"  style="display:inline;width:25px;height:25px;" />
+                       <span style="display:inline;font-size:20px;color:#fff;">晓琳_台湾普通话</span></p>
+                       <p style="height:40px;"> <input type="checkbox" name="voiceCheck" value="xiaoqian" style="display:inline;width:25px;height:25px;" />
+                       <span style="display:inline;font-size:20px;color:#fff;">晓倩_东北话</span></p>
+                       <p style="height:40px;"> <input type="checkbox" name="voiceCheck" value="aisxrong" style="display:inline;width:25px;height:25px;" />
+                       <span style="display:inline;font-size:20px;color:#fff;">小蓉_四川话</span></p>
+                    </div>
+                    <div style="float:left;margin-left:50px;width:200px;">
+                        <p style="height:40px;"> <input type="checkbox" name="voiceCheck" value="xiaokun"  style="display:inline;width:25px;height:25px;" />
+                        <span style="display:inline;font-size:20px;color:#fff;">小坤_河南话</span></p>
+                        <p style="height:40px;"> <input type="checkbox" name="voiceCheck" value="aisxqiang"  style="display:inline;width:25px;height:25px;" />
+                        <span style="display:inline;font-size:20px;color:#fff;">小强_湖南话</span></p>
+                        <p style="height:40px;"> <input type="checkbox" name="voiceCheck" value="aisxying"  style="display:inline;width:25px;height:25px;" />
+                        <span style="display:inline;font-size:20px;color:#fff;">小英_陕西话</span></p>
+                        <p style="height:40px;"> <input type="checkbox" name="voiceCheck" value="aisjiuxu"  style="display:inline;width:25px;height:25px;" />
+                        <span style="display:inline;font-size:20px;color:#fff;">许久_普通话</span></p>
+                        <p style="height:40px;"> <input type="checkbox" name="voiceCheck" value="aisxping"  style="display:inline;width:25px;height:25px;" />
+                        <span style="display:inline;font-size:20px;color:#fff;">小萍_普通话</span></p>
+                        <p style="height:40px;"> <input type="checkbox" name="voiceCheck" value="aisxiaobin"  style="display:inline;width:25px;height:25px;" />
+                        <span style="display:inline;font-size:20px;color:#fff;">小兵_普通话</span></p>
+                        <p style="height:40px;"> <input type="checkbox" name="voiceCheck" value="laoma"  style="display:inline;width:25px;height:25px;" />
+                        <span style="display:inline;font-size:20px;color:#fff;">老马_普通话</span></p>
+                        <p style="height:40px;"> <input type="checkbox" name="voiceCheck" value="aisxrong"  style="display:inline;width:25px;height:25px;" />
+                        <span style="display:inline;font-size:20px;color:#fff;">晓蓉_普通话</span></p>
+                        <p style="height:40px;"> <input type="checkbox" name="voiceCheck" value="wangru"  style="display:inline;width:25px;height:25px;" />
+                        <span style="display:inline;font-size:20px;color:#fff;">王茹_普通话</span></p>
+                        <p style="height:40px;"> <input type="checkbox" name="voiceCheck" value="aisbabyxu"  style="display:inline;width:25px;height:25px;" />
+                        <span style="display:inline;font-size:20px;color:#fff;">许小宝_普通话</span></p>
+
+                    </div>
+                    <div style="float:left;margin-left:50px;width:200px;"></div>
+                        <p style="height:40px;"> <input type="checkbox" name="voiceCheck" value="aisjinger"  style="display:inline;width:25px;height:25px;" />
+                        <span style="display:inline;font-size:20px;color:#fff;">小婧_普通话</span></p>
+                        <p style="height:40px;"> <input type="checkbox" name="voiceCheck" value="yefang"  style="display:inline;width:25px;height:25px;" />
+                        <span style="display:inline;font-size:20px;color:#fff;">叶芳_普通话</span></p>
+                        <p style="height:40px;"> <input type="checkbox" name="voiceCheck" value="aisduck"  style="display:inline;width:25px;height:25px;" />
+                        <span style="display:inline;font-size:20px;color:#fff;">唐老鸭_普通话</span></p>
+                        <p style="height:40px;"> <input type="checkbox" name="voiceCheck" value="aisxmeng"  style="display:inline;width:25px;height:25px;" />
+                        <span style="display:inline;font-size:20px;color:#fff;">小梦_普通话</span></p>
+                        <p style="height:40px;"> <input type="checkbox" name="voiceCheck" value="aismengchun"  style="display:inline;width:25px;height:25px;" />
+                        <span style="display:inline;font-size:20px;color:#fff;">孟春_普通话</span></p>
+                        <p style="height:40px;"> <input type="checkbox" name="voiceCheck" value="ziqi"  style="display:inline;width:25px;height:25px;" />
+                        <span style="display:inline;font-size:20px;color:#fff;">紫琪_普通话</span></p>
+                        <p style="height:40px;"> <input type="checkbox" name="voiceCheck" value="aisduoxu"  style="display:inline;width:25px;height:25px;" />
+                        <span style="display:inline;font-size:20px;color:#fff;">许多_普通话</span></p>
+                        <p style="height:40px;"> <input type="checkbox" name="voiceCheck" value="aisxxin"  style="display:inline;width:25px;height:25px;" />
+                        <span style="display:inline;font-size:20px;color:#fff;">蜡笔小新_普通话</span></p>
+                        <p style="height:40px;"> <input type="checkbox" name="voiceCheck" value="jiajia"  style="display:inline;width:25px;height:25px;" />
+                        <span style="display:inline;font-size:20px;color:#fff;">佳佳_本地普通话</span></p>
+                        <p style="height:40px;"> <input type="checkbox" name="voiceCheck" value="xiaoxue"  style="display:inline;width:25px;height:25px;" />
+                        <span style="display:inline;font-size:20px;color:#fff;">小雪_本地普通话</span></p>
+                    </div>
+                    
+                     <div style="width:800px;">
+                         <div id="cancel-voiceType" style="float:left; width:200px;height:60px;margin-left:100px;margin-top:10px;color:#fff;border:solid 2px #fff;border-radius:10px;line-height:60px;text-align:center;font-size:25px;">取消选中</div>
+                         <div id="save-voiceType" style="float:left;width:200px;height:60px;margin-left:150px;margin-top:10px;color:#fff;border:solid 2px #fff;border-radius:10px;line-height:60px;text-align:center;font-size:25px;">保存</div>
+                     </div>
+
+                    </div>
+
+                    <div class="naviDataBottom" style=" width:800px;clear:both;padding-top:20px;"></div>
+                </div>
+                <div class="settingCityData">
+                    <div class="modeSwitch-list" style="background: none;width: 700px;">
+                        <div style=" height: 52px;width: 634px;line-height: 52px;float: left;background: url(image/list1.png) repeat;padding-left: 10px;"><i style="font-size: 30px;" class="iconfont">&#xe609;</i>当前城市：<span id="nowCity">上海</span></div>
+                        <div id="settingCityData-close" style=" height: 52px;width: 54px;line-height: 52px;text-align: center;float: left;background: url(image/list1.png) repeat;margin-left: 1px;"><i class="iconfont">&#xe608;</i></div>
+                    </div>
+                    <div class="naviDataCont" style=" width: 700px;padding-top: 25px;">
+<!--                         <div style="margin-left: 30px;width: 70%">设置城市：
+                            <input type="text" placeholder="请输入城市名" id="cityname">
+                        </div>
+                        <div id="savaCity" style="margin-left: 30px;width: 120px;height: 40px;line-height: 40px;text-align: center; border: solid 1px #fff;border-radius: 3px;">保存</div> -->
+                        <div style="margin-left: 30px;">请先选择省份:</div>
+                    <div id="provinceList" class="provinceList" style="margin-left: 30px;"></div>
+
+                    
+
+
+
+
+
+                    </div>
+                    <div class="naviDataBottom" style=" width: 700px;height: 300px;">
+                    <div style="margin-left: 30px;width: 100%;height: 40px;">选择城市:</div>
+                    <div id="citynamelist" class="provinceList" style="margin-left: 30px;width: 660px;clear: both;margin-top: 10px;"></div>
+
+
+
+                    </div>
+                </div>
+                <div class="settingServiceData">
+                    <div class="modeSwitch-list" style="background: none;width: 800px;">
+                        <div style=" height: 52px;width: 734px;line-height: 52px;float: left;background: url(image/list1.png) repeat;padding-left: 10px;"><i style="font-size: 30px;" class="iconfont">&#xe609;</i>&nbsp;&nbsp;<span>业务展示设置</span></div>
+                        <div id="settingServiceData-close" style=" height: 52px;width: 54px;line-height: 52px;text-align: center;float: left;background: url(image/list1.png) repeat;margin-left: 1px;"><i class="iconfont">&#xe608;</i></div>
+                    </div>
+                    <div class="naviDataCont" style=" width: 800px;padding-top: 25px;height: 555px;">
+                        <div class="lanmu">
+                            <div class="lanm">栏目1 :</div>
+                            <div class="lanm">是否启用</div>
+                            <div class="lanm">
+                                <input id="checkdoc1" style=" width: 25px;height: 25px;" type="checkbox">
+                            </div>
+                            <div class="lanm">名称:</div>
+                            <div class="lanm" style=" width: 150px;">
+                                <input id="textdoc1" style="text-align: center;height: 40px;" type="text">
+                            </div>
+                            <div class="lanm" style="border:solid 1px #fff;border-radius: 2px;text-align: center;line-height: 40px;margin-left: 15px;" id="savedoc1">保存</div>
+                            <div class="lanm" style=" width: 200px;padding-left: 8px;">(文件夹APP\doc\iteam1)</div>
+                        </div>
+                        <div class="lanmu">
+                            <div class="lanm">栏目2 :</div>
+                            <div class="lanm">是否启用</div>
+                            <div class="lanm">
+                                <input id="checkdoc2" style=" width: 25px;height: 25px;" type="checkbox">
+                            </div>
+                            <div class="lanm">名称:</div>
+                            <div class="lanm" style=" width: 150px;">
+                                <input id="textdoc2" style="text-align: center;" type="text">
+                            </div>
+                            <div class="lanm" style="border:solid 1px #fff;border-radius: 2px;text-align: center;line-height: 40px;margin-left: 15px;" id="savedoc2">保存</div>
+                            <div class="lanm" style=" width: 200px;padding-left: 8px;">(文件夹APP\doc\iteam2)</div>
+                        </div>
+                        <div class="lanmu">
+                            <div class="lanm">栏目3 :</div>
+                            <div class="lanm">是否启用</div>
+                            <div class="lanm">
+                                <input id="checkdoc3" style=" width: 25px;height: 25px;" type="checkbox">
+                            </div>
+                            <div class="lanm">名称:</div>
+                            <div class="lanm" style=" width: 150px;">
+                                <input id="textdoc3" style="text-align: center;" type="text">
+                            </div>
+                            <div class="lanm" style="border:solid 1px #fff;border-radius: 2px;text-align: center;line-height: 40px;margin-left: 15px;" id="savedoc3">保存</div>
+                            <div class="lanm" style=" width: 200px;padding-left: 8px;">(文件夹APP\doc\iteam3)</div>
+                        </div>
+                        <div class="lanmu">
+                            <div class="lanm">栏目4 :</div>
+                            <div class="lanm">是否启用</div>
+                            <div class="lanm">
+                                <input id="checkdoc4" style=" width: 25px;height: 25px;" type="checkbox">
+                            </div>
+                            <div class="lanm">名称:</div>
+                            <div class="lanm" style=" width: 150px;">
+                                <input id="textdoc4" style="text-align: center;" type="text">
+                            </div>
+                            <div class="lanm" style="border:solid 1px #fff;border-radius: 2px;text-align: center;line-height: 40px;margin-left: 15px;" id="savedoc4">保存</div>
+                            <div class="lanm" style=" width: 200px;padding-left: 8px;">(文件夹APP\doc\iteam4)</div>
+                        </div>
+                        <div class="lanmu">
+                            <div class="lanm">栏目5 :</div>
+                            <div class="lanm">是否启用</div>
+                            <div class="lanm">
+                                <input id="checkdoc5" style=" width: 25px;height: 25px;" type="checkbox">
+                            </div>
+                            <div class="lanm">名称:</div>
+                            <div class="lanm" style=" width: 150px;">
+                                <input id="textdoc5" style="text-align: center;" type="text">
+                            </div>
+                            <div class="lanm" style="border:solid 1px #fff;border-radius: 2px;text-align: center;line-height: 40px;margin-left: 15px;" id="savedoc5">保存</div>
+                            <div class="lanm" style=" width: 200px;padding-left: 8px;">(文件夹APP\doc\iteam5)</div>
+                        </div>
+                        <div class="lanmu">
+                            <div class="lanm">栏目6 :</div>
+                            <div class="lanm">是否启用</div>
+                            <div class="lanm">
+                                <input id="checkdoc6" style=" width: 25px;height: 25px;" type="checkbox">
+                            </div>
+                            <div class="lanm">名称:</div>
+                            <div class="lanm" style=" width: 150px;">
+                                <input id="textdoc6" style="text-align: center;" type="text">
+                            </div>
+                            <div class="lanm" style="border:solid 1px #fff;border-radius: 2px;text-align: center;line-height: 40px;margin-left: 15px;" id="savedoc6">保存</div>
+                            <div class="lanm" style=" width: 200px;padding-left: 8px;">(文件夹APP\doc\iteam6)</div>
+                        </div>
+                        <div class="lanmu">
+                            <div class="lanm">栏目7 :</div>
+                            <div class="lanm">是否启用</div>
+                            <div class="lanm">
+                                <input id="checkdoc7" style=" width: 25px;height: 25px;" type="checkbox">
+                            </div>
+                            <div class="lanm">名称:</div>
+                            <div class="lanm" style=" width: 150px;">
+                                <input id="textdoc7" style="text-align: center;" type="text">
+                            </div>
+                            <div class="lanm" style="border:solid 1px #fff;border-radius: 2px;text-align: center;line-height: 40px;margin-left: 15px;" id="savedoc7">保存</div>
+                            <div class="lanm" style=" width: 200px;padding-left: 8px;">(文件夹APP\doc\iteam7)</div>
+                        </div>
+                        <div class="lanmu">
+                            <div class="lanm">栏目8 :</div>
+                            <div class="lanm">是否启用</div>
+                            <div class="lanm">
+                                <input id="checkdoc8" style=" width: 25px;height: 25px;" type="checkbox">
+                            </div>
+                            <div class="lanm">名称:</div>
+                            <div class="lanm" style=" width: 150px;">
+                                <input id="textdoc8" style="text-align: center;" type="text">
+                            </div>
+                            <div class="lanm" style="border:solid 1px #fff;border-radius: 2px;text-align: center;line-height: 40px;margin-left: 15px;" id="savedoc8">保存</div>
+                            <div class="lanm" style=" width: 200px;padding-left: 8px;">(文件夹APP\doc\iteam8)</div>
+                        </div>
+                    </div>
+                    <div class="naviDataBottom" style=" width:800px;clear:both;padding-top:20px;">
+  
+                            <div style="width:120px;float: left;">欢迎语设置：</div>
+                            <div style=" width: 450px;float: left;">
+                                <input id="sceneVal" style="text-align: center;width: 450px;" type="text">
+                            </div>
+                            <div  style="float: left; border:solid 1px #fff;border-radius: 2px;text-align: center;line-height: 40px;margin-left: 15px; width: 150px;height: 40px;" id="saveScene">保存</div>
+        
+                    </div>
+                </div>
+                             <div class="settingAdData">
+                    <div class="modeSwitch-list" style="background: none;width: 700px;">
+                        <div style=" height: 52px;width: 634px;line-height: 52px;float: left;background: url(image/list1.png) repeat;padding-left: 10px;"><i style="font-size: 30px;" class="iconfont">&#xe609;</i>底部广告设置</div>
+                        <div id="settingAdData-close" style=" height: 52px;width: 54px;line-height: 52px;text-align: center;float: left;background: url(image/list1.png) repeat;margin-left: 1px;"><i class="iconfont">&#xe608;</i></div>
+                    </div>
+                    <div class="naviDataCont" style=" width: 700px;padding-top: 25px;height:400px;">
+                        <div style="margin-left: 30px;width: 70%">选择广告样式：
+                              <!-- Dropdown Trigger -->
+                                 <a class='dropdown-button btn' href='#' data-activates='dropdown1' id="ad-title-name">视频广告</a>
+                                 <ul id='dropdown1' class='dropdown-content'>
+                                     <li><a href="#!" id="ad-video">视频广告</a></li>
+                                     <li><a href="#!" id="ad-pic">循环图片</a></li>
+                                     <li><a href="#!" id="ad-link">外部网址</a></li>
+                                 </ul>
+                        </div>
+                        <div id="savaCity" style="margin-left: 30px;width: 120px;height: 40px;line-height: 40px;text-align: center; "></div>
+                         <div id="videoTip" style="margin-left:30px;" hidden>
+                            <div style="height:50px;">(配置前，请将视频文件导入到APP/video文件夹下，点击选择该文件夹下的视频文件)</div>
+                            <a href="filemover://start" style="display: block;width: 120px;height: 44px;text-align: center;color: #fff;border:solid 1px #fff;border-radius: 2px;line-height: 44px;margin-bottom: 20px;">导入文件</a>
+                            <div style="height:50px;"><input type="file" id="selectvideo"></div>
+                            <div id="save_selectvideo" style="border:solid 1px #fff;border-radius: 2px;text-align: center;line-height: 40px;margin-left: 0px;width: 120px;">保存</div>
+                        </div>
+  
+                        <div id="mgpic" hidden>
+                       <div class="lanmu">
+                            <div class="lanm" style="width: 150px;padding-left: 10px;">循环图片设置：</div>
+                            <div class="lanm" style=" width: 300px;">
+                                <input id="AdPicVal" style="text-align: center;" multiple type="file">
+                            </div>
+                            <div class="lanm" hidden style="border:solid 1px #fff;border-radius: 2px;text-align: center;line-height: 40px;margin-left: 15px;" id="saveAdPicSum">保存</div>
+                            <div class="lanm" hidden style="text-align: center;line-height: 40px;width: 100px;" id="picUpload">正在上传中...</div>
+                        </div>
+                        </div>
+                        <div class="lanmu" id="mgaddress" hidden>
+                            <div class="lanm">网址名：</div>
+
+                            <div class="lanm" style=" width: 450px;">
+                                <input id="AdLinkVal" style="text-align: center;width: 400px;" type="text">
+                            </div>
+                            <div class="lanm" style="border:solid 1px #fff;border-radius: 2px;text-align: center;line-height: 40px;margin-left: 15px;" id="saveAdLink">保存</div>
+                        </div>
+                    </div>
+                    <div class="naviDataBottom" style=" width: 700px;">
+                    </div>
+            </div>
+            </div>
+
+        </div>
+        <div class="settingMapBox">
+            <!-- 人脸注册 -->
+            <div class="FaceRegistration">
+                <div id="close-FaceRegistration"><a class="btn-floating right btn-large waves-effect waves-teal blue-grey lighten-3"><i style="color:#223241" class="iconfont">&#xe608;</i></a></div>
+                <div class="getPhoto">
+                    <img id="camera_image" src="image/camerabgbefor.png" style=" width: 600px;height: 450px;display: block;">
+                    <div class="choosePic">请选择最佳图片：</div>
+                    <div class="getPhotoBottom">
+                        <ul class="selectPhoto">
+                            <li class="li-1" onclick="choose('li-1')">
+                                <img id="image1" src="image/camerabg.png" style=" width: 100%" />
+                            </li>
+                            <li class="li-2" onclick="choose('li-2')" style="margin-left: 8px;">
+                                <img id="image2" src="image/camerabg.png" style=" width:100%" />
+                            </li>
+                            <li class="li-3" onclick="choose('li-3')" style="margin-left: 8px;">
+                                <img id="image3" src="image/camerabg.png" style=" width:100%" />
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="getInfo">
+                    <div class="getInfoBtn">
+                        <img src="image/getphoto.png" style=" width: 100%;">
+                    </div>
+                    <div class="regPhoto">
+                        <img id="image4" src="image/camerabg.png" style=" width: 100%" height="150" />
+                    </div>
+                    <div class="regName">请输入用户名：</div>
+                    <div class="regInput">
+                        <input type="text" placeholder="请输入..." id="numkeyboard1" style="color:#26304b;font-size: 18px;" />
+                    </div>
+                    <div class="regSubmit">
+                        <img src="image/submitphoto.png" alt="" height="100%">
+                    </div>
+
+                </div>
+                <div class="photoTime2" hidden>5</div>
+            </div>
+            <!-- 上传地图 -->
+            <div class="settingMapBox-upload">
+                <div id="close-settingMapBox-upload"><a class="btn-floating right btn-large waves-effect waves-teal blue-grey lighten-3"><i style="color:#223241" class="iconfont">&#xe608;</i></a></div>
+                <div class="prelook z-depth-1">
+                    <img id="createMap_preview" src="image/preMap.png" width="500" height="500" style="display: block; height: 500px;">
+                    <canvas id="uploadMap" height="800" width="800" hidden></canvas>
+                </div>
+                <div class="prelook-input waves-effect waves-light  z-depth-3">
+                    <label for="doc_createMap" style="color:#ffffff;font-size: 20px;padding-top:10px;">请选择本地地图</label>
+                    <input type="file" class="prlookfile" name="file_createMap" id="doc_createMap" hidden>
+                </div>
+                <div class="upload_createMap_box">
+                    <a id="upload_createMap" class="waves-effect waves-light btn z-depth-3">确认上传</a>
+                </div>
+            </div>
+            <!-- 自主建图 -->
+            <div class="settingMapBox-create">
+                <div id="close-settingMapBox-create"><a class="btn-floating right btn-large waves-effect waves-teal blue-grey lighten-3"><i style="color:#223241" class="iconfont">&#xe608;</i></a></div>
+                 <div class="mapCanvas-top" style="position: absolute;z-index: 10;width: 820px;height: 820px;background-color:none;left: 130px;top: 200px;"></div>
+                <div style="margin-left: 100px;margin-top: 60px;" id="nav">
+                    <canvas id="canvas" ></canvas>
+                </div>
+                <div class="settingMapBox-create-state" style="font-weight: bold;">当前状态：导航模式</div>
+                <div class="save_createMap_box">
+                    <a id="start_createMap" class="waves-effect waves-light btn z-depth-3">开启建图</a>
+                    <a id="save_createMap" class="waves-effect waves-light btn z-depth-3">保存地图</a>
+                </div>
+                <div id="createMapMode" hidden>
+                    <div style=" width: 300px;height: 150px;font-size: 25px;text-align: center;line-height: 150px;">您是否要保存地图？</div>
+                    <div style=" width: 300px;height: 40px;">
+                        <div id="noSavaMap" style=" width: 60px;height: 40px;text-align: center;line-height: 40px; float: left;font-size: 20px;border: solid 1px #a5a4a4;border-radius: 3px;margin-left: 60px;">否</div>
+                        <div id="isSavaMap" style="text-align: center;line-height: 40px;  width: 60px;height: 40px;float: left;font-size: 20px;border: solid 1px #a5a4a4;border-radius: 3px;margin-left: 50px;">是</div>
+                    </div>
+                </div>
+                <div id="quit-createMapMode" hidden>
+                    <div style=" width: 300px;height: 150px;font-size: 25px;text-align: center;line-height: 150px;">您是否要退出自主建图？</div>
+                    <div style=" width: 300px;height: 40px;">
+                        <div id="noQuitMap" style=" width: 60px;height: 40px;text-align: center;line-height: 40px; float: left;font-size: 20px;border: solid 1px #a5a4a4;border-radius: 3px;margin-left: 60px;">否</div>
+                        <div id="isQuitMap" style="text-align: center;line-height: 40px;  width: 60px;height: 40px;float: left;font-size: 20px;border: solid 1px #a5a4a4;border-radius: 3px;margin-left: 50px;">是</div>
+                    </div>
+                </div>
+                <div id="mymap-save" hidden  style="position: absolute;width: 120px;height: 120px;z-index: 1000px;left: 435px;top: 550px;">    <div class="load" style="width: 200px;height: 200px;padding-left: 10px;"><img src="image/load.gif" alt=""></div>
+    <div id="saveMapState" style="color:red;width:200px;font-size: 20px;font-weight: bold;text-align: center;">正在保存中......</div> 
+    </div>
+      <div id="mymap-save2"  style="position: absolute;width: 640px;height: 382px;z-index: 1000;left: 230px;top: 400px;background: url(image/scu.png) no-repeat;">                
+     <div id="saveQuit" style="color:red;width:200px;font-size: 20px;font-weight: bold;text-align: center;margin-left: 260px;margin-top: 270px;width: 120px;height: 44px;color: #fff;line-height: 44px;text-align: center;border: solid 1px #fff;border-radius: 5px;">关闭</div>           
+ </div>
+            </div>
+            <!-- 修改导航地图 -->
+            <div class="settingMapBox-modify">
+                <div id="close-settingMapBox-modify"><a class="btn-floating right btn-large waves-effect waves-teal blue-grey lighten-3"><i style="color:#223241" class="iconfont">&#xe608;</i></a></div>
+                <div style="width:550px;height:100px;font-size:30px;text-align:right;line-height:100px;color:#000;">修改导航地图</div>
+                <div style="margin-left: 100px;margin-top: 30px;width: 800px;height: 1100px;overflow: hidden;position: absolute;" id="nav_modify">
+                    <iframe id="modfiyIframe" src="" frameborder="0" width="800" height="1100" scrolling="no"></iframe>
+                </div>
+                <div id="quit-modifyMapMode" hidden>
+                    <div style=" width: 300px;height: 150px;font-size: 25px;text-align: center;line-height: 150px;">您是否要退出修改地图？</div>
+                    <div style=" width: 300px;height: 40px;">
+                        <div id="noQuitMap-modify" style=" width: 60px;height: 40px;text-align: center;line-height: 40px; float: left;font-size: 20px;border: solid 1px #a5a4a4;border-radius: 3px;margin-left: 60px;">否</div>
+                        <div id="isQuitMap-modify" style="text-align: center;line-height: 40px;  width: 60px;height: 40px;float: left;font-size: 20px;border: solid 1px #a5a4a4;border-radius: 3px;margin-left: 50px;">是</div>
+                    </div>
+                </div>
+            </div>
+            <!-- 导航配置 -->
+            <div class="settingMapBox-setting">
+                <div id="close-settingMapBox-setting"><a class="btn-floating right btn-large waves-effect waves-teal blue-grey lighten-3"><i style="color:#223241" class="iconfont">&#xe608;</i></a></div>
+                <iframe src="admin/admap.html" width="1000" height="1000" frameborder="0" style="overflow-x: hidden;"  ></iframe>
+            </div>
+            <!-- 机器人硬件检测 -->
+            <div class="hardwareTest-setting">
+                <div id="close-hardwareTest-setting"><a class="btn-floating right btn-large waves-effect waves-teal blue-grey lighten-3"><i style="color:#223241" class="iconfont">&#xe608;</i></a></div>
+                <div class="hardwareTest-cont">
+                    <p>
+                        <a id="hd-scramState" class="hardWareInfo waves-effect waves-light">急停状态</a> <span id="hd-scramState-value" class="hardware-value"></span>
+                        <a id="hd-ReadEEPRom" class="waves-effect waves-light hardWareInfo">产品型号</a> <span id="hd-ReadEEPRom-val" class="hardware-value"></span>
+                        <a id="hd-ReadHV" class="waves-effect waves-light hardWareInfo">硬件版本</a> <span id="hd-ReadHV-val" class="hardware-value"></span>
+                    </p>
+                    <p><a id="hd-ReadSN" class="waves-effect waves-light hardWareInfo">&nbsp;序列号&nbsp;</a> <span id="hd-ReadSN-val" class="hardware-value"></span>
+                        <a id="hd-ReadMD" class="waves-effect waves-light hardWareInfo">出厂日期</a> <span id="hd-ReadMD-val" class="hardware-value"></span>
+                        <a id="hd-ReadGPSID" class="waves-effect waves-light hardWareInfo">读取GPSID</a> <span id="hd-ReadGPSID-val" class="hardware-value"></span></p>
+                    <p><a id="hd-ReadProgramVersion" class="waves-effect waves-light hardWareInfo">程序版本</a> <span id="hd-ReadProgramVersion-val" class="hardware-value"></span></p>
+                    <p><span style="color:#000;font-size:18px;">设定眼睛颜色:</span></p>
+                    <p>
+                        <a id="hd-settingColor1" class="hd-eyecolor waves-effect waves-light" style="background-color: #ff0000;"></a>
+                        <a id="hd-settingColor2" class="hd-eyecolor waves-effect waves-light" style="background-color: #008080;"></a>
+                        <a id="hd-settingColor3" class="hd-eyecolor waves-effect waves-light" style="background-color: #1b0bf5;"></a>
+                        <a id="hd-settingColor4" class="hd-eyecolor waves-effect waves-light" style="background-color: #f808b1"></a>
+                        <a id="hd-settingColor5" class="hd-eyecolor waves-effect waves-light" style="background-color: #a008f8"></a>
+                        <a id="hd-settingColor6" class="hd-eyecolor waves-effect waves-light" style="background-color: #08a6f8"></a>
+                        <a id="hd-settingColor7" class="hd-eyecolor waves-effect waves-light" style="background-color: #79f808"></a>
+                        <a id="hd-settingColor8" class="hd-eyecolor waves-effect waves-light" style="background-color: #eaf808"></a>
+                        <a id="hd-settingColor9" class="hd-eyecolor waves-effect waves-light" style="background-color: #ffffff;border: solid 1px #6d6c6b"></a>
+                    </p>
+                    <p><span style="color:#000;font-size:18px;">电机检测:</span></p>
+                    <p><a id="hd-StressTest-left" class="waves-effect waves-light hardWareInfo">左侧电机检测</a><a id="hd-StressTest-right" class="waves-effect waves-light hardWareInfo" style="margin-left: 20px;">右侧电机检测</a><span id="hd-StressTest-val" class="hardware-value"></span></p>
+                    <p><span style="color:#000;font-size:18px;">超声波检测:</span></p>
+                    <p><a id="hd-SetUltrasonic" class="waves-effect waves-light hardWareInfo">检测超声波</a> <span id="hd-SetUltrasonic-val" class="hardware-value"></span></p>
+                    <p><span style="color:#000;font-size:18px;">运动检测:</span></p>
+                    <p><a id="hd-Forward" class="waves-effect waves-light hardWareInfo ">前进</a> <span id="hd-Forward-val" class="hardware-value"></span><a id="hd-Back" class="waves-effect waves-light hardWareInfo ">后退</a> <span id="hd-Back-val" class="hardware-value"></span></p>
+                    <p><a id="hd-TurnLeft" class="waves-effect waves-light hardWareInfo ">左转</a><span id="hd-TurnLeft-val" class="hardware-value"></span><a id="hd-TurnRight" class="waves-effect waves-light hardWareInfo ">右转</a> <span id="hd-TurnRight-val" class="hardware-value"></span></p>
+                    <p><a id="hd-Stop" class="waves-effect waves-light hardWareInfo">停止</a> <span id="hd-Stop-val" class="hardware-value"></span></p>
+                </div>
+            </div>
+        </div>
+        <div class="mapvideo" hidden>
+            <div class="mapvideo-cont">
+             <div id="close-mapvideo"><a class="btn-floating right btn-large waves-effect waves-teal blue-grey lighten-3"><i style="color:#223241" class="iconfont">&#xe608;</i></a></div>
+             <div class="mapvideo-title">
+                视频配置
+             </div>
+             <div class="mapvideo-btc">
+                <div class="mapvideo-btc-l">1. 到达目标点是否播放视频</div>
+                 <div class="mapvideo-btc-r">
+                        <div style="float: left;">开启</div>
+                        <div class="switch" style="float: left; overflow:hidden;">
+                                <label><input id="mapvideobtn" type="checkbox"><span class="lever" style="background-color: #131c25;"></span></label>
+                        </div>
+                        <div style="float: left;">关闭</div>
+                 </div>
+             </div>
+            </div>
+        </div>
+    </div>
+    <!--  ==================================================    业务总览    =================================================================== -->
+    <div data-role="page" style=" width:1080px;height:1920px;background:url(image/bg2.jpg) no-repeat;" id="zonglan">
+        <a href="#homemain" data-transition="none" class="login-back btn-floating btn-large grey lighten-5" style="color:#000">返回</a>
+        <div style=" width:1080px;height:1540px;color:#000;padding-top: 0px;">
+            <div id="servive-cont-t" style="color:#fff;font-size: 40px;width: 100%;height: 130px;line-height: 130px;text-align: center;"></div>
+            <div id="zonglan-cont1" class="zonglan-cont" style=" height: 1700px; width: 1000px;margin-left: 70px;overflow: auto;"></div>
+            <div id="zonglan-cont2" class="zonglan-cont" style=" height: 1700px; width: 1000px;margin-left: 70px;overflow: auto;"></div>
+            <div id="zonglan-cont3" class="zonglan-cont" style=" height: 1700px; width: 1000px;margin-left: 70px;overflow: auto;"></div>
+            <div id="zonglan-cont4" class="zonglan-cont" style=" height: 1700px; width: 1000px;margin-left: 70px;overflow: auto;"></div>
+            <div id="zonglan-cont5" class="zonglan-cont" style=" height: 1700px; width: 1000px;margin-left: 70px;overflow: auto;"></div>
+            <div id="zonglan-cont6" class="zonglan-cont" style=" height: 1700px; width: 1000px;margin-left: 70px;overflow: auto;"></div>
+            <div id="zonglan-cont7" class="zonglan-cont" style=" height: 1700px; width: 1000px;margin-left: 70px;overflow: auto;"></div>
+            <div id="zonglan-cont8" class="zonglan-cont" style=" height: 1700px; width: 1000px;margin-left: 70px;overflow: auto;"></div>
+            <div id="zonglan-cont9" class="zonglan-cont" style=" height: 1700px; width: 1000px;margin-left: 70px;overflow: auto;"></div>
+            </div>
+    </div>
+    <div data-role="page" style=" width:1080px;height:1920px;background:#E8F0F5;" id="zonglan-detail">
+        <a href="#zonglan" data-transition="none" class="login-back btn-floating btn-large grey lighten-5" style="color:#000">返回</a>
+        <div style=" width:1080px;height:1540px;color:#000;background-color: #e8f0f5;padding-top: 80px;">
+            <iframe id="zonglan-cont-detail" src="" frameborder="0" width="1080" height="1780" scrolling="yes"></iframe>
+        </div>
+    </div>
+    <script type="text/javascript" src="js/common/jquery.min.js"></script>
+    <script type="text/javascript" src="js/common/jquery.mobile.min.js"></script>
+    <script type="text/javascript" src="js/common/materialize.min.js"></script>
+    <script type="text/javascript" src="js/common/easeljs.min.js"></script>
+    <script type="text/javascript" src="js/common/eventemitter2.min.js"></script>
+    <script type="text/javascript" src="js/common/roslib.min.js"></script>
+    <script type="text/javascript" src="js/common/ros2d.min.js"></script>
+    <script type="text/javascript" src="js/common/nav2d.min.js"></script>
+    <script type="text/javascript" src="js/common/keyboard.min.js"></script>
+    
+    <script type="text/javascript" src="js/power.js"></script>
+    <script type="text/javascript" src="js/voice.js"></script>
+    <script type="text/javascript" src="js/camera.js"></script>
+    <script type="text/javascript" src="js/baseEvent.js"></script>
+    <script type="text/javascript" src="js/navigation.js"></script> 
+    <script type="text/javascript" src="js/app.js"></script>
+</body>
+</html>

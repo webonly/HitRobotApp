@@ -1,0 +1,23 @@
+
+.main-row-red {
+    border: 5px solid #f00;
+    font-size: 2em;
+    text-align: center;
+    font-weight: 600;
+    margin-top: 50px;
+    border-radius: 10px;
+    background:#f00;
+}
+
+.main-row-black {
+    border: 5px solid #000;
+    height: 100%;
+    border-radius: 10px;
+}
+.main-btn-ctrol {
+    /*background:#0026ff;*/
+}
+
+#main-content-ctrol {
+    display:none;
+}

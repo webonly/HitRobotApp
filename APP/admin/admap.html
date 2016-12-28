@@ -1,0 +1,343 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+  <link rel="stylesheet" href="../css/materialize.min.css">
+  <link rel="stylesheet" href="../css/hrg.css">
+	<script type="text/javascript" src="../js/common/jquery.min.js"></script>
+  <script type="text/javascript" src="../js/common/materialize.min.js"></script>
+  <script type="text/javascript" src="../js/common/easeljs.min.js"></script>
+  <script type="text/javascript" src="../js/common/eventemitter2.min.js"></script>
+  <script type="text/javascript" src="../js/common/roslib.min.js"></script>
+  <script type="text/javascript" src="../js/common/ros2d.min.js"></script>
+  <script type="text/javascript" src="../js/common/nav2d.min.js"></script>
+
+</head>
+<body style="width: 950px;overflow-x: hidden;">
+
+          <div style="color: #304050;height: 50px;line-height: 50px; width: 900px;font-size: 30px;font-weight: bold;margin-left: 50px;margin-top: 60px;">添加位置：
+          <span id="formtips" style="font-size: 20px;color:#f4878c;" hidden>名称不能为空！</span></div>
+          <div class="addlocation">
+            名称：<input id="name" name="PlaceName" type="text" style="width: 200px;">
+            Pos_x:<input id="posx" name="Pos_x" type="text">
+            Pos_y:<input id="posy" name="Pox_y" type="text">
+            Pos_z:<input id="posz" name="Pox_z" type="text"><br />
+            Ori_x:<input id="orix" name="Ori_x" type="text">
+            Ori_y:<input id="oriy" name="Ori_y" type="text">
+            Ori_z:<input id="oriz" name="Ori_z" type="text">
+            Ori_w:<input id="oriw" name="Ori_w" type="text"><br />
+            <div><span style="vertical-align: super;">是否返回:</span><input type="checkbox" id="isback" style="width: 50px;height: 50px;" />
+            <span style="vertical-align: super;margin-left: 60px;">是否播放视频:</span><input type="checkbox" id="isPlayVideo" style="width: 50px;height: 50px;" />
+            <span style="vertical-align: super;margin-left: 60px;">是否自动循环:</span><input type="checkbox" id="isLoop" style="width: 50px;height: 50px;" /></div>
+           说话内容:<input id="speakText" name="speakText" type="text" style="width: 700px;overflow: hidden;"><br />
+           <span style="vertical-align: top;">视频名称：</span><input id="mapVideoName" name="speakText" type="file" style="width: 700px;overflow: hidden;border: none;height: 30px;">
+           <div>（视频名称为APP/video文件夹里的视频文件，设置之前请将视频导入到该文件夹里）</div>
+           <a href="filemover://start" style="display: block;width: 140px;height: 44px;text-align: center;color: #0d2c48;border:solid 2px #0d2c48;border-radius: 2px;line-height: 44px;margin-bottom: 20px;margin-top: 20px;">导入文件</a>
+         
+          </div>
+          <div class="submitloacation">
+              <button type="submit" id="insertSubmit">提交</button>
+          </div>
+            <div style="color: #304050;height: 50px;line-height: 50px; width: 900px;font-size: 30px;font-weight: bold;margin-left: 50px;margin-top: 60px;">位置列表：</div>
+            <div class="settingLocation">
+                <span>编号</span><span>名称</span><span>Pos_x</span><span>Pos_y</span><span>Pos_z</span><span>Ori_z</span><span>Ori_w</span><span>视频名</span><span>放视频</span><span>返回</span><span>循环</span><span>操作</span>
+            </div>
+            <div style="width: 800px;margin-left: 50px;height: auto;">
+              <ul id="locationsetting">
+              </ul>
+            </div>
+  <!-- Modal Structure -->
+  <div id="modal1" class="modal" style="overflow: hidden;">
+    <div class="modal-content" >
+            <div class="addlocation" style="width: 500px;height: 550px;">
+            名称：<input id="m-name" name="PlaceName" type="text" style="width: 400px;">
+            Pos_x:<input id="m-posx" name="Pos_x" type="text"><br />
+            Pos_y:<input id="m-posy" name="Pox_y" type="text">
+            Pos_z:<input id="m-posz" name="Pox_z" type="text"><br />
+            Ori_x:<input id="m-orix" name="Ori_x" type="text">
+            Ori_y:<input id="m-oriy" name="Ori_y" type="text"><br />
+            Ori_z:<input id="m-oriz" name="Ori_z" type="text">
+            Ori_w:<input id="m-oriw" name="Ori_w" type="text"><br />
+            是否返回<input id="m-isback" name="check" type="checkbox" checked="true" style="width: 60px;border:solid 1px red;">
+            <span style="vertical-align: super;margin-left: 60px;">是否播放视频:</span><input type="checkbox" id="m-isPlayVideo" style="width: 50px;height: 50px;" /><br />
+            <span style="vertical-align: super;">是否自动循环:</span><input type="checkbox" id="m-isLoop" style="width: 50px;height: 50px;" /><br />
+            说话内容:<input id="m-speakText"  type="text" style="width:300px;"><br />
+            视频名称:<input id="m-mapVideoName"  type="file" style="width:300px;">
+            <input type="text" id="m-id" hidden>
+          </div>
+          <div class="submitloacation2" style="margin-top: 20px;">
+           <button type="reset" class="modal-close">关闭</button><button class="modal-action modal-close" type="submit" id="submit-modify" >保存</button>
+          </div>
+    </div>
+    <div class="modal-footer">
+  <!--     <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">保存</a> -->
+    </div>
+  </div>
+
+    <!-- Modal Structure -->
+  <div id="modal2" class="modal">
+    <div class="modal-content">
+      <div style="width: 100%;height: 60px;line-height: 60px;text-align: center;font-size: 25px;">您确认要删除么？</div>
+     <div class="submitloacation2" style="margin-top: 100px;">
+              <button type="button" id="modify-false" >取消</button><button  id="modify-true" type="button">确认</button>
+          </div>
+    </div>
+    <div class="modal-footer">
+  <!--     <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">保存</a> -->
+    </div>
+  </div>
+</body>
+</html>
+<script>
+  var ros = new ROSLIB.Ros({
+        url: 'ws://192.168.0.7:9090'
+    });
+
+    var poseListener = new ROSLIB.Topic({
+        ros: ros,
+        name: '/robot_pose',
+        messageType: 'geometry_msgs/Pose',
+        throttle_rate: 100
+    });
+
+
+    poseListener.subscribe(function (pose) {
+        document.getElementById("posx").value = pose.position.x;
+        document.getElementById("posy").value = pose.position.y;
+        document.getElementById("posz").value = pose.position.z;
+        document.getElementById("orix").value = pose.orientation.x;
+        document.getElementById("oriy").value = pose.orientation.y;
+        document.getElementById("oriz").value = pose.orientation.z;
+        document.getElementById("oriw").value = pose.orientation.w;
+        // 得到x/y坐标
+        // pose.position.x;
+        // -pose.position.y;
+        // 得到四元素方向
+        // pose.orientation
+  })
+
+var mapListData;
+var current_id;
+function modifyList(item,id){
+  current_id=id;
+  $('#modal1').openModal();
+  $("#m-name").val(mapListData[item].PlaceName);
+  $("#m-posx").val(mapListData[item].PointValue.Pos_x);
+  $("#m-posy").val(mapListData[item].PointValue.Pos_y);
+  $("#m-posz").val(mapListData[item].PointValue.Pos_z);
+  $("#m-orix").val(mapListData[item].PointValue.Ori_x);
+  $("#m-oriy").val(mapListData[item].PointValue.Ori_y);
+  $("#m-oriz").val(mapListData[item].PointValue.Ori_z);
+  $("#m-oriw").val(mapListData[item].PointValue.Ori_w);
+  $("#m-speakText").val(mapListData[item].SpeakText);
+
+  $("#m-mapVideoName").val(mapListData[item].MoviePath);
+
+
+
+  document.getElementById("m-isback").checked=mapListData[item].AutoBack;
+  document.getElementById("m-isLoop").checked=mapListData[item].Loop;
+  if (mapListData[item].MovieOrText==1) {
+    document.getElementById("m-isPlayVideo").checked=true;
+  }else{
+        document.getElementById("m-isPlayVideo").checked=false;
+  }
+
+
+ }
+ function deleteList(item){
+   $('#modal2').openModal();
+   $("#modify-false").click(function(){
+        $('#modal2').closeModal();
+   });
+  $("#modify-true").click(function(){
+   $.ajax({
+        url:"http://127.0.0.1/Access.asmx/Delete?id="+item,
+        dataType: "json",
+        async: true,
+        success: function(data){
+         getLocationData();
+        },
+        error: function(request, error) {
+        }
+    });
+   $('#modal2').closeModal();
+      });
+ }
+
+  $("#submit-modify").click(function(){
+     var sendData={"AutoBack":false,"ID":0,"PlaceName":"","PointValue":{"Ori_w":0,"Ori_x":0,"Ori_y":0,"Ori_z":0,"Pos_x":0,"Pos_y":0,"Pos_z":0},"SpeakText":"","MovieOrText":0};
+     sendData.AutoBack=document.getElementById("m-isback").checked;
+     sendData.ID=$("#m-id").val();
+     sendData.PlaceName=$("#m-name").val();
+     sendData.PointValue.Ori_x=$("#m-orix").val();
+     sendData.PointValue.Ori_y=$("#m-oriy").val();
+     sendData.PointValue.Ori_z=$("#m-oriz").val();
+     sendData.PointValue.Ori_w=$("#m-oriw").val();
+     sendData.PointValue.Pos_x=$("#m-posx").val();
+     sendData.PointValue.Pos_y=$("#m-posy").val();
+     sendData.PointValue.Pos_z=$("#m-posz").val();
+     sendData.SpeakText=$("#m-speakText").val();
+     if (document.getElementById("m-mapVideoName").files!=undefined &&document.getElementById("m-mapVideoName").files.length!=0) {
+       sendData.MoviePath=document.getElementById("m-mapVideoName").files[0].name;
+     }else{
+      sendData.MoviePath="";
+     }
+
+     sendData.Loop=document.getElementById("m-isLoop").checked;
+     if (document.getElementById("m-isPlayVideo").checked) {
+      sendData.MovieOrText=1;
+     }else{
+      sendData.MovieOrText=0;
+     }
+     sendData.ID=current_id;
+      console.log(JSON.stringify(sendData));
+       $.ajax({
+        url:"http://127.0.0.1/Access.asmx/Update",
+        dataType: "json",
+        type: 'post',
+        data: {"info":JSON.stringify(sendData)},
+        success: function(data) {
+        getLocationData();
+        },
+        error: function(request, error) {
+
+        }
+    });
+  });
+    //提交数据
+    $("#insertSubmit").click(function(){
+     var sendData={"AutoBack":false,"PlaceName":"","PointValue":{"Ori_w":0,"Ori_x":0,"Ori_y":0,"Ori_z":0,"Pos_x":0,"Pos_y":0,"Pos_z":0},"SpeakText":"","MovieOrText":0,"MoviePath":"","Loop":false};
+     sendData.AutoBack=document.getElementById("isback").checked;
+     sendData.Loop=document.getElementById("isLoop").checked;
+     if (document.getElementById("isPlayVideo").checked) {
+      sendData.MovieOrText=1;
+     }else{
+      sendData.MovieOrText=0;
+     }
+
+     sendData.PlaceName=$("#name").val();
+     sendData.PointValue.Ori_x=$("#orix").val();
+     sendData.PointValue.Ori_y=$("#oriy").val();
+     sendData.PointValue.Ori_z=$("#oriz").val();
+     sendData.PointValue.Ori_w=$("#oriw").val();
+     sendData.PointValue.Pos_x=$("#posx").val();
+     sendData.PointValue.Pos_y=$("#posy").val();
+     sendData.PointValue.Pos_z=$("#posz").val();
+     sendData.SpeakText=$("#speakText").val();
+     
+     if (document.getElementById("mapVideoName").files!=undefined&&document.getElementById("m-mapVideoName").files.length!=0) {
+       sendData.MoviePath=document.getElementById("mapVideoName").files[0].name;
+     }else{
+      sendData.MoviePath="";
+     }
+
+       $.ajax({
+        url:"http://127.0.0.1/Access.asmx/Insert?info="+JSON.stringify(sendData),
+        dataType: "json",
+        async: true,
+        success: function(data) {
+        getLocationData();
+        },
+        error: function(request, error) {
+        }
+    });
+  });
+
+function getLocationData(){
+     $.ajax({
+        url:"http://127.0.0.1/Access.asmx/GetAllInfo",
+        dataType: "json",
+        async: true,
+        success: function(data) {
+        mapListData=data;
+        var contData=""
+        for(var i=0;i<data.length;i++){
+          var controllerState="";
+         if (data[i].AutoBack) {
+           controllerState="是";
+         }else{
+           controllerState="否";
+         }
+         var loopState="";
+         if (data[i].Loop) {
+           loopState="是";
+         }else{
+           loopState="否";
+         }
+         var videoState="";
+         if (data[i].MovieOrText==1) {
+           videoState="是";
+         }else{
+           videoState="否";
+         }
+         contData+="<li class='locationLsit'><span>"+(i+1)+"</span><span>"+data[i].PlaceName+"</span><span>"+data[i].PointValue.Pos_x+"</span><span>"+data[i].PointValue.Pos_y+"</span><span>"+data[i].PointValue.Pos_z+"</span><span>"+data[i].PointValue.Ori_z+"</span><span>"+data[i].PointValue.Ori_w+"</span><span>"+data[i].MoviePath+"</span><span>"+videoState+"</span><span>"+controllerState+"</span><span>"+loopState+"</span><span style='width:80px'><a class='waves-effect waves-light modal-trigger' href='#modal1' onclick='modifyList("+i+","+data[i].ID+")'>修改</a> | <a href='#' onclick='deleteList("+data[i].ID+")'>删除</a></span></li>"
+        }
+        $("#locationsetting").html(contData);
+        },
+        error: function(request, error) {
+        }
+    });
+}
+getLocationData();
+$("#localsubmit").submit(function(event) {
+  if ($("#name").val()=="") {
+    $("#formtips").text("位置名称不能为空！").fadeIn("300");
+    setTimeout(function(){
+      $("#formtips").fadeOut("300");
+      }, 2000);
+    return false;
+  }else if ($("#posx").val()=="") {
+    $("#formtips").text("Pos_x不能为空！").fadeIn("300");
+    setTimeout(function(){
+      $("#formtips").fadeOut("300");
+      }, 2000);
+    return false;
+  }else if ($("#posy").val()=="") {
+    $("#formtips").text("Pos_y不能为空！").fadeIn("300");
+    setTimeout(function(){
+      $("#formtips").fadeOut("300");
+      }, 2000);
+    return false;
+  }else if ($("#posz").val()=="") {
+    $("#formtips").text("Pos_z不能为空！").fadeIn("300");
+    setTimeout(function(){
+      $("#formtips").fadeOut("300");
+      }, 2000);
+    return false;
+  }else if ($("#orix").val()=="") {
+    $("#formtips").text("Ori_x不能为空！").fadeIn("300");
+    setTimeout(function(){
+      $("#formtips").fadeOut("300");
+      }, 2000);
+    return false;
+  }else if ($("#oriy").val()=="") {
+    $("#formtips").text("Ori_y不能为空！").fadeIn("300");
+    setTimeout(function(){
+      $("#formtips").fadeOut("300");
+      }, 2000);
+    return false;
+  }else if ($("#oriz").val()=="") {
+    $("#formtips").text("Ori_z不能为空！").fadeIn("300");
+    setTimeout(function(){
+      $("#formtips").fadeOut("300");
+      }, 2000);
+    return false;
+  }else if ($("#oriw").val()=="") {
+    $("#formtips").text("Ori_w不能为空！").fadeIn("300");
+    setTimeout(function(){
+      $("#formtips").fadeOut("300");
+      }, 2000);
+    return false;
+  }
+
+
+});
+ //禁用右键
+document.oncontextmenu = function(){
+       return false;
+};
+
+</script>

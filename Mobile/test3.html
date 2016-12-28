@@ -1,0 +1,116 @@
+﻿<! DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="screen-orientation" content="portrait">
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <title>基础模板</title>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <script type="text/javascript" src="jquery/jquery.js"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+
+    <!--    <script type="text/javascript" src="navigation/materialize.min.js"></script>
+    <script type="text/javascript" src="navigation/easeljs.min.js"></script>
+    <script type="text/javascript" src="navigation/eventemitter2.min.js"></script>
+    <script type="text/javascript" src="navigation/ros2d.min.js"></script>
+    <script type="text/javascript" src="navigation/nav2d.min.js"></script>
+    <script type="text/javascript" src="navigation/roslib.min.js"></script>
+     <script type="text/javascript" src="navigation/joystickteleop.js"></script>-->
+
+
+
+    <script src="iflytek/md5.js"></script>
+    <script src="http://webapi.openspeech.cn/socket.io/socket.io.js"></script>
+    <script src='http://webapi.openspeech.cn/js/util/zepto.min.js'></script>
+    <script src='http://webapi.openspeech.cn/js/util/jwav.min.js'></script>
+    <script src='http://webapi.openspeech.cn/fingerprint.js'></script>
+    <script src="http://webapi.openspeech.cn/iat.min.js"></script>
+
+
+    <link href="css/main.css" rel="stylesheet" />
+    <script type="text/javascript" src="js/test.js"></script>
+    <script>
+
+    </script>
+</head>
+
+<body style="background: #0ff">
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2 main-row-black">
+
+                <div class="row">
+                    <div class="col-md-12 main-row-red main-btn-ctrol">控制</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 main-row-red main-btn-navigation">导航</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 main-row-red main-btn-set">配置</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 main-row-red main-btn-other1">其他1</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 main-row-red main-btn-other2">其他2</div>
+                </div>
+
+            </div>
+            <div class="col-md-9 col-md-offset-1 main-row-black">
+                <div class="row" id="main-content-ctrol">
+                    <div class="col-md-2 main-row-black">
+                        <div class="row">
+                            <div class="col-md-12 main-row-red main-ctrol-handle">手柄</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 main-row-red main-ctrol-voice">音控</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 main-row-red main-ctrol-IMU">IMU</div>
+                        </div>
+                    </div>
+                    <div class="col-md-10 main-row-black main-ctrol-content" style="display: none">
+                    </div>
+                    <div class="col-md-10 main-row-black main-ctrol-content-handle" style="display: none">
+                        <iframe id="main-iframe-handle" src="." style="display: none" frameborder="0"></iframe>
+                    </div>
+                    <div class="col-md-10 main-row-black main-ctrol-content-voice" style="display: none;">
+                        <div class="col-md-12">
+                            <div class="col-md-8">
+                                <p class="text-info" style="font-size: 2em; margin-top: 20px">识别结果</p>
+                            </div>
+                            <div class="col-md-4">
+                                <img id="talk1" src="image/talk1.png" style="height: 150px; float: right" />
+                            </div>
+
+                        </div>
+                        <div class="col-md-12">
+                            <img id="voicechat" src="image/voicechat.gif" style="display: none; margin-left: auto; margin-right: auto; margin-top: 50px" />
+                        </div>
+
+                    </div>
+                    <div class="col-md-10 main-row-black main-ctrol-content-IMU" style="display: none;">
+                        <iframe id="main-iframe-IMU" src="." style="display: none;" frameborder="0"></iframe>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="btn-toolbar">
+        <div class="btn-group">
+            <a class="btn btn-default" href="#"><span class="glyphicon-align-left  glyphicon"></span></a>
+            <a class="btn btn-default" href="#"><span class="glyphicon-align-center glyphicon"></span></a>
+            <a class="btn btn-default" href="#"><span class="glyphicon-align-right glyphicon"></span></a>
+            <a class="btn btn-default" href="#"><span class="glyphicon-align-justify glyphicon"></span></a>
+        </div>
+    </div>
+</body>
+
+</html>
